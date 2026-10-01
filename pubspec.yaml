@@ -1,0 +1,25 @@
+name: weather_with_flutter
+description: "Simple project to demonstrate my flutter skills"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  cupertino_icons: ^2.0.0
+  flutter_riverpod: ^3.4.3
+  get: ^4.7.3
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - lib/assets/
