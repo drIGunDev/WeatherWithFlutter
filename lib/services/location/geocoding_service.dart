@@ -1,6 +1,6 @@
 import 'types/location.dart';
 
-typedef GeocodingResults = List<Location>;
+typedef GeocodingResult = List<Location>;
 
 final class GeocodingFetchParameters({
   required final String name,
@@ -9,5 +9,5 @@ final class GeocodingFetchParameters({
 });
 
 abstract interface class GeocodingService {
-  Future<GeocodingResults> fetchLocations({required GeocodingFetchParameters params});
+  Future<GeocodingResult> fetchLocations({required GeocodingFetchParameters params});
 }

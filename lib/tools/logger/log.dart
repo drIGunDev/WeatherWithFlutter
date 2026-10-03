@@ -4,7 +4,7 @@ import 'gosignal_printer.dart';
 
 final class Log {
   static final Logger _logger = Logger(
-    printer: GoSignalPrinter(
+    printer: WeatherPrinter(
       threshold: .debug,
       lineColored: true,
     ),

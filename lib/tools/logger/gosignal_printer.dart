@@ -1,10 +1,10 @@
 import 'package:logger/logger.dart';
 
-final class GoSignalPrinter extends LogPrinter {
+final class WeatherPrinter extends LogPrinter {
   Level threshold;
   bool lineColored;
 
-  GoSignalPrinter({
+  WeatherPrinter({
     this.threshold = Level.info,
     this.lineColored = false,
   });

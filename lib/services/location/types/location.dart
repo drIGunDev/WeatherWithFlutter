@@ -15,26 +15,6 @@ final class Location {
   final String countryCode;
   final String city;
   final String timezone;
-
-  /// Sync bookkeeping, deliberately outside [operator ==].
-  ///
-  /// A place is the same place whichever revision described it last. Counting
-  /// it here made every cached forecast vanish the moment the location's
-  /// revision moved — the Timeline keeps only events whose location equals the
-  /// active one, and those events carry the location as it was when they were
-  /// fetched.
-  final int revisionId;
-
-  /// The one location the replica plans for.
-  ///
-  /// Part of the replica rather than a device setting: a second device has to
-  /// open on the same place, without asking again.
-  ///
-  /// Deliberately outside [operator ==]: this is replica state, not what makes
-  /// a place that place. Two copies of Berlin differing only in the flag are
-  /// the same Berlin — and the Timeline filters its events by comparing
-  /// locations, so counting the flag would have hidden every forecast the
-  /// moment a location became active.
   final bool isActive;
 
   Location({
@@ -46,7 +26,6 @@ final class Location {
     required this.countryCode,
     required this.city,
     required this.timezone,
-    this.revisionId = 0,
     this.isActive = false,
   }) : id = id ?? const UuidIdGenerator().generate();
 
@@ -66,14 +45,13 @@ final class Location {
       countryCode: '',
       city: '',
       timezone: '',
-      revisionId: revisionId,
       isActive: isActive,
     );
   }
 
   @override
   String toString() {
-    return 'Location{id: $id, latitude: $latitude, longitude: $longitude, name: $name, country: $country, countryCode: $countryCode, city: $city, timezone: $timezone, revisionId: $revisionId, isActive: $isActive}';
+    return 'Location{id: $id, latitude: $latitude, longitude: $longitude, name: $name, country: $country, countryCode: $countryCode, city: $city, timezone: $timezone, isActive: $isActive}';
   }
 
   @override

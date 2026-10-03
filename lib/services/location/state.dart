@@ -6,9 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'di.dart';
 import 'geocoding_service.dart';
 
-final class GeocodingNotifier extends AsyncNotifier<GeocodingResults> {
+final class GeocodingNotifier extends AsyncNotifier<GeocodingResult> {
   @override
-  FutureOr<GeocodingResults> build() {
+  FutureOr<GeocodingResult> build() {
     return Future.value([]);
   }
 

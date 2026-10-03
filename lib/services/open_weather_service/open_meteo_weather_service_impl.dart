@@ -1,20 +1,18 @@
 import 'dart:convert';
 
-import 'meteo_service.dart';
+import 'package:http/http.dart' as http;
+
+import 'weather_service.dart';
 import 'types/event.dart';
-import '../location/types/location.dart';
 import 'types/precipitation.dart';
 import 'types/temperature.dart';
 import 'types/weather_item.dart';
-
-import 'package:http/http.dart' as http;
-
 import 'types/weather_type.dart';
 import 'types/wind.dart';
 
 typedef WeatherApiRequestObserver = void Function(Uri uri, {int? statusCode});
 
-final class OpenWeatherServiceImpl implements MeteoService {
+final class OpenMeteoWeatherServiceImpl implements WeatherService {
   static const String _hourly =
       'rain,temperature_2m,apparent_temperature,precipitation_probability,'
       'precipitation,weather_code,wind_speed_10m,wind_direction_10m,'
@@ -23,27 +21,23 @@ final class OpenWeatherServiceImpl implements MeteoService {
   final http.Client _client;
   final WeatherApiRequestObserver? _onRequest;
 
-  const OpenWeatherServiceImpl({required this._client, this._onRequest});
+  const OpenMeteoWeatherServiceImpl({required this._client, this._onRequest});
 
   @override
-  Future<List<Event<WeatherItem>>> fetchForecast({
-    required Location location,
-    required int forecastDays,
-    required int pastDays,
-  }) async {
+  Future<MeteoResult> fetchForecast({required MeteoFetchParameters params}) async {
     final uri = Uri.https('api.open-meteo.com', '/v1/forecast', {
-      'latitude': location.latitude.toString(),
-      'longitude': location.longitude.toString(),
+      'latitude': params.location.latitude.toString(),
+      'longitude': params.location.longitude.toString(),
       'hourly': _hourly,
       'wind_speed_unit': 'kmh',
       'timezone': 'auto',
-      'past_days': '$pastDays',
-      'forecast_days': '$forecastDays',
+      'past_days': '${params.pastDays}',
+      'forecast_days': '${params.forecastDays}',
     });
     final response = await _send(uri);
 
     return switch (response.statusCode) {
-      200 => _transformToEvents(response.body, location),
+      200 => _transformToEvents(response.body, params.location),
       _ => throw Exception('HTTP ${response.statusCode}'),
     };
   }
@@ -60,9 +54,9 @@ final class OpenWeatherServiceImpl implements MeteoService {
   }
 
   Future<List<Event<WeatherItem>>> _transformToEvents(
-      String responseBody,
-      location,
-      ) async {
+    String responseBody,
+    location,
+  ) async {
     final decoded = await _parseResponse(responseBody);
 
     final results = <Event<WeatherItem>>[];
@@ -95,7 +89,6 @@ final class OpenWeatherServiceImpl implements MeteoService {
     return results;
   }
 
-
   Future<_OpenMeteoHourlyDTO> _parseResponse(String responseBody) async {
     final decoded = jsonDecode(responseBody);
     if (decoded is! Map<String, dynamic>) {
@@ -107,7 +100,6 @@ final class OpenWeatherServiceImpl implements MeteoService {
     return _OpenMeteoHourlyDTO.fromJson(hourly);
   }
 }
-
 
 final class _OpenMeteoHourlyDTO {
   final List<DateTime> time;
@@ -153,74 +145,74 @@ final class _OpenMeteoHourlyDTO {
   }
 
   static List<String> _stringList(
-      Map<String, dynamic> json,
-      String key,
-      ) {
+    Map<String, dynamic> json,
+    String key,
+  ) {
     final value = json[key];
     if (value is! List) {
       throw FormatException('Missing or invalid "$key"');
     }
     return value
         .map((item) {
-      switch (item) {
-        case null:
-          return '';
-        case String _:
-          return item.toString();
-        default:
-          throw FormatException(
-            'Invalid item in "$key": expected number, got ${item.runtimeType}',
-          );
-      }
-    })
+          switch (item) {
+            case null:
+              return '';
+            case String _:
+              return item.toString();
+            default:
+              throw FormatException(
+                'Invalid item in "$key": expected number, got ${item.runtimeType}',
+              );
+          }
+        })
         .toList(growable: false);
   }
 
   static List<double> _doubleList(
-      Map<String, dynamic> json,
-      String key,
-      ) {
+    Map<String, dynamic> json,
+    String key,
+  ) {
     final value = json[key];
     if (value is! List) {
       throw FormatException('Missing or invalid "$key"');
     }
     return value
         .map((item) {
-      switch (item) {
-        case null:
-          return 0.0;
-        case num _:
-          return item.toDouble();
-        default:
-          throw FormatException(
-            'Invalid item in "$key": expected number, got ${item.runtimeType}',
-          );
-      }
-    })
+          switch (item) {
+            case null:
+              return 0.0;
+            case num _:
+              return item.toDouble();
+            default:
+              throw FormatException(
+                'Invalid item in "$key": expected number, got ${item.runtimeType}',
+              );
+          }
+        })
         .toList(growable: false);
   }
 
   static List<int> _intList(
-      Map<String, dynamic> json,
-      String key,
-      ) {
+    Map<String, dynamic> json,
+    String key,
+  ) {
     final value = json[key];
     if (value is! List) {
       throw FormatException('Missing or invalid "$key"');
     }
     return value
         .map((item) {
-      switch (item) {
-        case null:
-          return 0;
-        case num _:
-          return item.toInt();
-        default:
-          throw FormatException(
-            'Invalid item in "$key": expected number, got ${item.runtimeType}',
-          );
-      }
-    })
+          switch (item) {
+            case null:
+              return 0;
+            case num _:
+              return item.toInt();
+            default:
+              throw FormatException(
+                'Invalid item in "$key": expected number, got ${item.runtimeType}',
+              );
+          }
+        })
         .toList(growable: false);
   }
 }

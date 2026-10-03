@@ -12,7 +12,7 @@ final class OpenMeteoGeocodingServiceImpl implements GeocodingService {
   OpenMeteoGeocodingServiceImpl({required this._client});
 
   @override
-  Future<GeocodingResults> fetchLocations({required GeocodingFetchParameters params}) async {
+  Future<GeocodingResult> fetchLocations({required GeocodingFetchParameters params}) async {
     final uri = Uri.https(
       'geocoding-api.open-meteo.com',
       '/v1/search',
@@ -46,7 +46,6 @@ final class OpenMeteoGeocodingServiceImpl implements GeocodingService {
             country: e.country,
             city: e.admin1,
             timezone: e.timezone,
-            revisionId: 0,
           ),
         )
         .toList();
