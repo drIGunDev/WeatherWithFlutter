@@ -1,17 +1,11 @@
 typedef WindStrength = double;
 typedef WindDirectionGrad = double;
 
-final class Wind {
-  final WindStrength forceKmPerHour;
-  final WindStrength gustsKmPerHour;
-  final WindDirectionGrad directionGrad;
-
-  const Wind({
-    required this.forceKmPerHour,
-    required this.gustsKmPerHour,
-    required this.directionGrad,
-  });
-
+final class const Wind({
+  required final WindStrength forceKmPerHour,
+  required final WindStrength gustsKmPerHour,
+  required final WindDirectionGrad directionGrad,
+}) {
   @override
   String toString() {
     return 'Wind{forceKmPerHour: $forceKmPerHour, gustsKmPerHour: $gustsKmPerHour, directionGrad: $directionGrad}';

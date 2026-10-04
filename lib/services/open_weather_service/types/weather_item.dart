@@ -4,25 +4,14 @@ import 'temperature.dart';
 import 'weather_type.dart';
 import 'wind.dart';
 
-final class WeatherItem implements GeoLocatable {
-  final WeatherType type;
-  final Temperature temperature;
-  final Temperature apparentTemperature;
-  final Precipitation precipitation;
-  final Wind wind;
-
-  @override
-  final Location location;
-
-  const WeatherItem({
-    required this.type,
-    required this.temperature,
-    required this.apparentTemperature,
-    required this.precipitation,
-    required this.wind,
-    required this.location,
-  });
-
+final class const WeatherItem({
+  required final WeatherType type,
+  required final Temperature temperature,
+  required final Temperature apparentTemperature,
+  required final Precipitation precipitation,
+  required final Wind wind,
+  @override required final location,
+}) implements GeoLocatable {
   @override
   String toString() {
     return 'WeatherItem{type: $type, temperature: $temperature, apparentTemperature: $apparentTemperature, precipitation: $precipitation, wind: $wind location: $location}';

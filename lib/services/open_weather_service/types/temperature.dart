@@ -2,12 +2,10 @@ typedef TemperatureValue = double;
 
 enum TemperatureUnit { celsius, fahrenheit }
 
-final class Temperature {
-  final TemperatureValue _value;
-  final TemperatureUnit _unit;
-
-  const Temperature._(this._value, this._unit);
-
+final class const Temperature._(
+  final TemperatureValue _value,
+  final TemperatureUnit _unit,
+) {
   Temperature.fromCelsius(double value) : this._(value, TemperatureUnit.celsius);
 
   Temperature.fromFahrenheit(double value) : this._(value, TemperatureUnit.fahrenheit);

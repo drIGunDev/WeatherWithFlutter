@@ -1,14 +1,8 @@
-final class Precipitation {
-  final double probabilityPercent;
-  final double amountMm;
-  final double rain;
-
-  const Precipitation({
-    required this.probabilityPercent,
-    required this.amountMm,
-    required this.rain,
-  });
-
+final class const Precipitation({
+  required final double probabilityPercent,
+  required final double amountMm,
+  required final double rain,
+}) {
   @override
   String toString() {
     return 'Precipitation{probabilityPercent: $probabilityPercent, amountMm: $amountMm, rain: $rain}';

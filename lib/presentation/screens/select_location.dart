@@ -3,17 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/location/di.dart';
 import '../../services/location/geocoding_service.dart';
-import '../themes.dart';
+import '../../app/themes.dart';
 import '../widgets/location_row.dart';
 
-class Geocoding extends ConsumerStatefulWidget {
-  const Geocoding({super.key});
+class SelectLocation extends ConsumerStatefulWidget {
+  const SelectLocation({super.key});
 
   @override
-  ConsumerState<Geocoding> createState() => _GeocodingState();
+  ConsumerState<SelectLocation> createState() => _GeocodingState();
 }
 
-class _GeocodingState extends ConsumerState<Geocoding> {
+class _GeocodingState extends ConsumerState<SelectLocation> {
   final TextEditingController _query = TextEditingController();
 
   @override
@@ -118,7 +118,7 @@ void main() => runApp(
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.bgSurface,
       ),
-      home: const Geocoding(),
+      home: const SelectLocation(),
     ),
   ),
 );

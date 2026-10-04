@@ -7,7 +7,7 @@ import 'package:weather_with_flutter/tools/logger/log.dart';
 
 void main() {
   test('test meteo provider', () async {
-    final container = ProviderContainer();
+    final container = ProviderContainer.test();
     final meteo = container.read(meteoServiceProvider);
     final result = await meteo.fetchForecast(
       params: MeteoFetchParameters(
