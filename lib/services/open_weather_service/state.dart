@@ -21,4 +21,8 @@ final class MeteoNotifier extends AsyncNotifier<MeteoResult> {
       return await provider.fetchForecast(params: params);
     });
   }
+
+  Future<void> reset() async {
+    state = const AsyncValue.data([]);
+  }
 }

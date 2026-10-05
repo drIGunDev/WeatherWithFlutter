@@ -10,4 +10,4 @@ final geocodingServiceProvider = Provider<GeocodingService>((ref) {
   return geocodingService;
 });
 
-final geocodingProvider = AsyncNotifierProvider<GeocodingNotifier, GeocodingResult>(GeocodingNotifier.new);
+final geocodingProvider = AsyncNotifierProvider<GeocodingNotifier, GeocodingState>(GeocodingNotifier.new);

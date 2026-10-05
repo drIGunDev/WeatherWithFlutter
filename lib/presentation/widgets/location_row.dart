@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/app_state.dart';
-import '../../services/location/types/location.dart';
 import '../../app/themes.dart';
-import '../../services/open_weather_service/di.dart';
-import '../../services/open_weather_service/weather_service.dart';
+import '../../services/location/types/location.dart';
 
 class LocationRow extends StatelessWidget {
-  final Location _location;
+  final Location? _location;
+  final void Function()? _onDelete;
+  final void Function()? _onTap;
 
   const LocationRow({
     super.key,
     required this._location,
+    this._onDelete,
+    this._onTap,
   });
 
   @override
@@ -24,19 +25,15 @@ class LocationRow extends StatelessWidget {
         builder: (context, ref, _) {
           return InkWell(
             onTap: () {
-              ref.read(appProvider.notifier).setLocation(_location);
-              ref.read(meteoProvider.notifier).fetchForecast(
-                MeteoFetchParameters(
-                  location: _location,
-                ),
-              );
-              Navigator.pop(context);
+              if (_onTap != null) {
+                _onTap();
+              }
             },
             borderRadius: BorderRadius.circular(AppSpacing.medium),
             child: Container(
               margin: const EdgeInsets.only(bottom: AppSpacing.medium),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
+                border: _location?.isActive == true ? Border.all(color: Colors.red) : Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(AppSpacing.medium),
               ),
               child: Padding(
@@ -50,22 +47,36 @@ class LocationRow extends StatelessWidget {
                       color: AppColors.iconsTint,
                     ),
                     const SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: .start,
-                      children: [
-                        Text(
-                          _location.name,
-                          style: TextStyle(fontSize: AppFontSizes.medium, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 2),
-                        Text('${_location.city}, ${_location.country}', style: TextStyle(fontSize: AppFontSizes.small)),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: .start,
+                        children: [
+                          if (_location != null) ...[
+                            Text(
+                              _location.name,
+                              style: TextStyle(fontSize: AppFontSizes.medium, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              '${_location.city}, ${_location.country}',
+                              style: TextStyle(fontSize: AppFontSizes.small),
+                            ),
+                          ] else ...[
+                            Text(
+                              'Select location',
+                              style: TextStyle(fontSize: AppFontSizes.medium, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ],
+                      ),
                     ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: () => {},
-                      child: Text('selected', style: TextStyle(fontSize: AppFontSizes.small)),
-                    ),
+                    if (_onDelete != null && _location != null) ...[
+                      const Spacer(),
+                      IconButton(
+                        icon: Icon(Icons.delete, size: 22, color: Colors.red[400]),
+                        onPressed: () => _onDelete(),
+                      ),
+                    ],
                   ],
                 ),
               ),

@@ -41,7 +41,11 @@ final class LocationManagerImpl({
 }) implements LocationManager {
   @override
   Future<void> add({required Location location}) async {
-    await _database.into(_database.locationTable).insert(location.toCompanion());
+    final existing = await _find(id: location.id);
+    if (existing == null) {
+      await _database.into(_database.locationTable).insert(location.toCompanion());
+    }
+    await setActive(location: location);
   }
 
   @override
@@ -78,5 +82,12 @@ final class LocationManagerImpl({
   @override
   Future<Locations> fetchAll() {
     return _database.select(_database.locationTable).get().then((value) => value.map((e) => e.toLocation()).toList());
+  }
+
+  Future<Location?> _find({required String id}) async {
+    final location = await (_database.select(
+      _database.locationTable,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+    return location?.toLocation();
   }
 }

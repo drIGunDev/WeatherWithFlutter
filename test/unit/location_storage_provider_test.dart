@@ -41,17 +41,17 @@ void main() {
     await storage.add(location: berlin);
     await storage.add(location: london);
     await storage.setActive(location: berlin);
-    var locations = await container.read(locationStorageProvider.future);
-    Log.d(locations);
-    assert(locations.isNotEmpty);
-    assert(locations.contains(berlin), true);
-    assert(locations.contains(london), true);
-    final activeLocation = locations.firstWhere((element) => element.isActive);
+    var state = await container.read(locationStorageProvider.future);
+    Log.d(state);
+    assert(state.locations.isNotEmpty);
+    assert(state.locations.contains(berlin), true);
+    assert(state.locations.contains(london), true);
+    final activeLocation = state.locations.firstWhere((element) => element.isActive);
     assert(activeLocation.id == berlin.id);
     assert(activeLocation.id != london.id);
     await storage.remove(location: berlin);
     await storage.remove(location: london);
-    locations = await container.read(locationStorageProvider.future);
-    assert(locations.isEmpty);
+    state = await container.read(locationStorageProvider.future);
+    assert(state.locations.isEmpty);
   });
 }

@@ -1,33 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:weather_with_flutter/presentation/screens/location_storage.dart';
 
 import '../../app/app_state.dart';
-import '../../services/location/types/location.dart';
+import '../../app/main.dart';
+import '../../services/db/di.dart';
 import '../../services/open_weather_service/di.dart';
-import 'select_location.dart';
+import '../../services/open_weather_service/weather_service.dart';
+import '../widgets/location_row.dart';
 
-class WeatherForecast extends ConsumerWidget {
+class WeatherForecast extends ConsumerStatefulWidget {
   const WeatherForecast({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WeatherForecast> createState() => _WeatherForecast();
+}
+
+class _WeatherForecast extends ConsumerState<WeatherForecast> {
+  @override
+  void initState() {
+    ref.read(locationManagerProvider).findActive().then((activeLocation) {
+      if (activeLocation != null) {
+        ref.read(appProvider.notifier).setLocation(activeLocation);
+        ref.read(meteoProvider.notifier).fetchForecast(MeteoFetchParameters(location: activeLocation));
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(appProvider);
     final weather = ref.watch(meteoProvider);
 
-    return ProviderScope(
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Weather with flutter"),
+      ),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            Expanded(
+              child: LocationStorage(),
+            ),
+          ],
         ),
-        home: Scaffold(
-          appBar: AppBar(
-            title: Text("Riverpod Demo"),
-          ),
-          body: Center(
-            child: _SelectBlock(
-              location: state.location,
-              child: Expanded(
+      ),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            children: [
+              LocationRow(
+                location: state.location,
+                onTap: () {
+                  Navigator.pushNamed(context, NavigationPaths.selectLocation);
+                },
+              ),
+              Expanded(
                 child: weather.when(
                   data: (data) {
                     return ListView.builder(
@@ -46,38 +75,10 @@ class WeatherForecast extends ConsumerWidget {
                   error: (err, stack) => Text('Error: $err'),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class _SelectBlock extends StatelessWidget {
-  final Widget _child;
-  final Location _location;
-
-  const _SelectBlock({super.key, required this._location, required this._child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text("name: ${_location.name}, country: ${_location.country}, city: ${_location.city}"),
-        SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => SelectLocation(),
-            ),
-          ),
-          child: Text('Select location'),
-        ),
-        SizedBox(height: 20),
-        _child,
-      ],
     );
   }
 }

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/app_state.dart';
+import '../../app/main.dart';
+import '../../services/db/di.dart';
 import '../../services/location/di.dart';
 import '../../services/location/geocoding_service.dart';
 import '../../app/themes.dart';
+import '../../services/open_weather_service/di.dart';
+import '../../services/open_weather_service/weather_service.dart';
 import '../widgets/location_row.dart';
 
 class SelectLocation extends ConsumerStatefulWidget {
@@ -80,7 +85,7 @@ class _GeocodingState extends ConsumerState<SelectLocation> {
                     return Column(
                       crossAxisAlignment: .start,
                       children: [
-                        if (data.isNotEmpty)
+                        if (data.result.isNotEmpty)
                           Text(
                             'Select a location'.toUpperCase(),
                             style: TextStyle(
@@ -93,7 +98,17 @@ class _GeocodingState extends ConsumerState<SelectLocation> {
 
                         const SizedBox(height: 16),
 
-                        for (final location in data) ...[LocationRow(location: location)],
+                        for (final location in data.result) ...[LocationRow(location: location,
+                          onTap: () {
+                            ref.read(locationStorageProvider.notifier).add(location: location);
+                            ref.read(meteoProvider.notifier).fetchForecast(MeteoFetchParameters(location: location));
+                            ref.read(appProvider.notifier).setLocation(location);
+
+                            Navigator.pushReplacementNamed(context, NavigationPaths.root);
+
+                            ref.read(geocodingProvider.notifier).reset();
+                          },)
+                        ],
                       ],
                     );
                   },

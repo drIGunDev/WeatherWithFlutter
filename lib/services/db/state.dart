@@ -6,10 +6,12 @@ import '../location/types/location.dart';
 import 'di.dart';
 import 'location_manager.dart';
 
-class LocationStorageNotifier extends AsyncNotifier<Locations> {
+final class LocationsStorageState({required final Locations locations});
+
+class LocationStorageNotifier extends AsyncNotifier<LocationsStorageState> {
   @override
-  FutureOr<Locations> build() {
-    return ref.read(locationManagerProvider).fetchAll();
+  Future<LocationsStorageState> build() async {
+    return  LocationsStorageState(locations: await ref.read(locationManagerProvider).fetchAll()); //Future.value(LocationsStorageState(locations: [])); //
   }
 
   Future<void> add({required Location location}) async {
@@ -27,9 +29,15 @@ class LocationStorageNotifier extends AsyncNotifier<Locations> {
     await _refresh();
   }
 
+  Future<Location?> findActive() async {
+    final location = await ref.read(locationManagerProvider).findActive();
+    return location;
+  }
+
   Future<void> _refresh() async{
     final manager = ref.read(locationManagerProvider);
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async => await manager.fetchAll());
+    final value = await AsyncValue.guard(() async => LocationsStorageState(locations: await manager.fetchAll()));
+    state = value;
   }
 }

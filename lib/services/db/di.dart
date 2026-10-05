@@ -13,4 +13,4 @@ final locationManagerProvider = Provider<LocationManager>((ref) {
   return LocationManagerImpl(database: ref.read(locationDatabaseProvider));
 });
 
-final locationStorageProvider = AsyncNotifierProvider<LocationStorageNotifier, Locations>(LocationStorageNotifier.new);
+final locationStorageProvider = AsyncNotifierProvider<LocationStorageNotifier, LocationsStorageState>(LocationStorageNotifier.new);
