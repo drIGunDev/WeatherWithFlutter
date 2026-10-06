@@ -56,8 +56,7 @@ class WeatherTable extends Table {
 
   RealColumn get rain => real()();
 
-  TextColumn get locationId =>
-      text().references(LocationTable, #id, onDelete: .cascade)();
+  TextColumn get locationId => text().references(LocationTable, #id, onDelete: .cascade)();
 }
 
 @DriftDatabase(tables: [LocationTable, WeatherTable])

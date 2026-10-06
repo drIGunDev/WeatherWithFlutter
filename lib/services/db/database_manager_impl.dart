@@ -9,8 +9,8 @@ import '../open_weather_service/types/weather_item.dart';
 import '../open_weather_service/types/weather_type.dart';
 import '../open_weather_service/types/wind.dart';
 import 'forecast_manager.dart';
-import 'weather_db.dart';
 import 'location_manager.dart';
+import 'weather_db.dart';
 
 extension _ToCompanion on Location {
   LocationTableCompanion toCompanion() {
@@ -225,17 +225,16 @@ final class DatabaseManagerImpl({
       await _updateLocation(location.copyWith(null));
       (_database.delete(
         _database.weatherTable,
-      )
-        ..where((tbl) => tbl.locationId.equals(location.id))).go();
+      )..where((tbl) => tbl.locationId.equals(location.id))).go();
     });
   }
 
   Future<List<WeatherTableData>> _fetchForecast(Location location) {
     return (_database.select(_database.weatherTable)
-      ..where((tbl) => tbl.locationId.equals(location.id))
-      ..orderBy([
+          ..where((tbl) => tbl.locationId.equals(location.id))
+          ..orderBy([
             (tbl) => OrderingTerm(expression: tbl.id, mode: OrderingMode.asc),
-      ]))
+          ]))
         .get();
   }
 
