@@ -7,6 +7,8 @@ abstract interface class GeoLocatable {
 }
 
 final class Location {
+  static const Location? empty = null;
+
   final LocationId id;
   final double latitude;
   final double longitude;

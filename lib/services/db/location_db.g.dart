@@ -3,12 +3,13 @@
 part of 'location_db.dart';
 
 // ignore_for_file: type=lint
-class $LocationTableTable extends LocationTable
-    with TableInfo<$LocationTableTable, LocationTableData> {
+class $LocationTableTable extends LocationTable with TableInfo<$LocationTableTable, LocationTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
+
   $LocationTableTable(this.attachedDatabase, [this._alias]);
+
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -106,6 +107,7 @@ class $LocationTableTable extends LocationTable
     ),
     defaultValue: const Constant(false),
   );
+
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -118,11 +120,14 @@ class $LocationTableTable extends LocationTable
     timezone,
     isActive,
   ];
+
   @override
   String get aliasedName => _alias ?? actualTableName;
+
   @override
   String get actualTableName => $name;
   static const String $name = 'location_table';
+
   @override
   VerificationContext validateIntegrity(
     Insertable<LocationTableData> instance, {
@@ -205,6 +210,7 @@ class $LocationTableTable extends LocationTable
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
+
   @override
   LocationTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -254,8 +260,7 @@ class $LocationTableTable extends LocationTable
   }
 }
 
-class LocationTableData extends DataClass
-    implements Insertable<LocationTableData> {
+class LocationTableData extends DataClass implements Insertable<LocationTableData> {
   final String id;
   final String name;
   final double latitude;
@@ -265,6 +270,7 @@ class LocationTableData extends DataClass
   final String city;
   final String timezone;
   final bool isActive;
+
   const LocationTableData({
     required this.id,
     required this.name,
@@ -276,6 +282,7 @@ class LocationTableData extends DataClass
     required this.timezone,
     required this.isActive,
   });
+
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -322,6 +329,7 @@ class LocationTableData extends DataClass
       isActive: serializer.fromJson<bool>(json['isActive']),
     );
   }
+
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -359,6 +367,7 @@ class LocationTableData extends DataClass
     timezone: timezone ?? this.timezone,
     isActive: isActive ?? this.isActive,
   );
+
   LocationTableData copyWithCompanion(LocationTableCompanion data) {
     return LocationTableData(
       id: data.id.present ? data.id.value : this.id,
@@ -366,9 +375,7 @@ class LocationTableData extends DataClass
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
       country: data.country.present ? data.country.value : this.country,
-      countryCode: data.countryCode.present
-          ? data.countryCode.value
-          : this.countryCode,
+      countryCode: data.countryCode.present ? data.countryCode.value : this.countryCode,
       city: data.city.present ? data.city.value : this.city,
       timezone: data.timezone.present ? data.timezone.value : this.timezone,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
@@ -403,6 +410,7 @@ class LocationTableData extends DataClass
     timezone,
     isActive,
   );
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -429,6 +437,7 @@ class LocationTableCompanion extends UpdateCompanion<LocationTableData> {
   final Value<String> timezone;
   final Value<bool> isActive;
   final Value<int> rowid;
+
   const LocationTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -441,6 +450,7 @@ class LocationTableCompanion extends UpdateCompanion<LocationTableData> {
     this.isActive = const Value.absent(),
     this.rowid = const Value.absent(),
   });
+
   LocationTableCompanion.insert({
     required String id,
     required String name,
@@ -460,6 +470,7 @@ class LocationTableCompanion extends UpdateCompanion<LocationTableData> {
        countryCode = Value(countryCode),
        city = Value(city),
        timezone = Value(timezone);
+
   static Insertable<LocationTableData> custom({
     Expression<String>? id,
     Expression<String>? name,
@@ -568,44 +579,43 @@ class LocationTableCompanion extends UpdateCompanion<LocationTableData> {
 
 abstract class _$LocationDatabase extends GeneratedDatabase {
   _$LocationDatabase(QueryExecutor e) : super(e);
+
   $LocationDatabaseManager get managers => $LocationDatabaseManager(this);
   late final $LocationTableTable locationTable = $LocationTableTable(this);
+
   @override
-  Iterable<TableInfo<Table, Object?>> get allTables =>
-      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+  Iterable<TableInfo<Table, Object?>> get allTables => allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [locationTable];
 }
 
-typedef $$LocationTableTableCreateCompanionBuilder =
-    LocationTableCompanion Function({
-      required String id,
-      required String name,
-      required double latitude,
-      required double longitude,
-      required String country,
-      required String countryCode,
-      required String city,
-      required String timezone,
-      Value<bool> isActive,
-      Value<int> rowid,
-    });
-typedef $$LocationTableTableUpdateCompanionBuilder =
-    LocationTableCompanion Function({
-      Value<String> id,
-      Value<String> name,
-      Value<double> latitude,
-      Value<double> longitude,
-      Value<String> country,
-      Value<String> countryCode,
-      Value<String> city,
-      Value<String> timezone,
-      Value<bool> isActive,
-      Value<int> rowid,
-    });
+typedef $$LocationTableTableCreateCompanionBuilder = LocationTableCompanion Function({
+  required String id,
+  required String name,
+  required double latitude,
+  required double longitude,
+  required String country,
+  required String countryCode,
+  required String city,
+  required String timezone,
+  Value<bool> isActive,
+  Value<int> rowid,
+});
+typedef $$LocationTableTableUpdateCompanionBuilder = LocationTableCompanion Function({
+  Value<String> id,
+  Value<String> name,
+  Value<double> latitude,
+  Value<double> longitude,
+  Value<String> country,
+  Value<String> countryCode,
+  Value<String> city,
+  Value<String> timezone,
+  Value<bool> isActive,
+  Value<int> rowid,
+});
 
-class $$LocationTableTableFilterComposer
-    extends Composer<_$LocationDatabase, $LocationTableTable> {
+class $$LocationTableTableFilterComposer extends Composer<_$LocationDatabase, $LocationTableTable> {
   $$LocationTableTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -613,6 +623,7 @@ class $$LocationTableTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+
   ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -659,8 +670,7 @@ class $$LocationTableTableFilterComposer
   );
 }
 
-class $$LocationTableTableOrderingComposer
-    extends Composer<_$LocationDatabase, $LocationTableTable> {
+class $$LocationTableTableOrderingComposer extends Composer<_$LocationDatabase, $LocationTableTable> {
   $$LocationTableTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -668,6 +678,7 @@ class $$LocationTableTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+
   ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -714,8 +725,7 @@ class $$LocationTableTableOrderingComposer
   );
 }
 
-class $$LocationTableTableAnnotationComposer
-    extends Composer<_$LocationDatabase, $LocationTableTable> {
+class $$LocationTableTableAnnotationComposer extends Composer<_$LocationDatabase, $LocationTableTable> {
   $$LocationTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -723,34 +733,27 @@ class $$LocationTableTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
+  GeneratedColumn<String> get id => $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<double> get latitude =>
-      $composableBuilder(column: $table.latitude, builder: (column) => column);
+  GeneratedColumn<String> get name => $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<double> get longitude =>
-      $composableBuilder(column: $table.longitude, builder: (column) => column);
+  GeneratedColumn<double> get latitude => $composableBuilder(column: $table.latitude, builder: (column) => column);
 
-  GeneratedColumn<String> get country =>
-      $composableBuilder(column: $table.country, builder: (column) => column);
+  GeneratedColumn<double> get longitude => $composableBuilder(column: $table.longitude, builder: (column) => column);
+
+  GeneratedColumn<String> get country => $composableBuilder(column: $table.country, builder: (column) => column);
 
   GeneratedColumn<String> get countryCode => $composableBuilder(
     column: $table.countryCode,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get city =>
-      $composableBuilder(column: $table.city, builder: (column) => column);
+  GeneratedColumn<String> get city => $composableBuilder(column: $table.city, builder: (column) => column);
 
-  GeneratedColumn<String> get timezone =>
-      $composableBuilder(column: $table.timezone, builder: (column) => column);
+  GeneratedColumn<String> get timezone => $composableBuilder(column: $table.timezone, builder: (column) => column);
 
-  GeneratedColumn<bool> get isActive =>
-      $composableBuilder(column: $table.isActive, builder: (column) => column);
+  GeneratedColumn<bool> get isActive => $composableBuilder(column: $table.isActive, builder: (column) => column);
 }
 
 class $$LocationTableTableTableManager
@@ -766,11 +769,7 @@ class $$LocationTableTableTableManager
           $$LocationTableTableUpdateCompanionBuilder,
           (
             LocationTableData,
-            BaseReferences<
-              _$LocationDatabase,
-              $LocationTableTable,
-              LocationTableData
-            >,
+            BaseReferences<_$LocationDatabase, $LocationTableTable, LocationTableData>,
           ),
           LocationTableData,
           PrefetchHooks Function()
@@ -782,12 +781,9 @@ class $$LocationTableTableTableManager
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () =>
-              $$LocationTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$LocationTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$LocationTableTableAnnotationComposer($db: db, $table: table),
+          createFilteringComposer: () => $$LocationTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$LocationTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$LocationTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
@@ -840,11 +836,7 @@ class $$LocationTableTableTableManager
               .map(
                 (e) => (
                   e.readTable<$LocationTableTable, LocationTableData>(table),
-                  BaseReferences<
-                    _$LocationDatabase,
-                    $LocationTableTable,
-                    LocationTableData
-                  >(db, table, e),
+                  BaseReferences<_$LocationDatabase, $LocationTableTable, LocationTableData>(db, table, e),
                 ),
               )
               .toList(),
@@ -865,11 +857,7 @@ typedef $$LocationTableTableProcessedTableManager =
       $$LocationTableTableUpdateCompanionBuilder,
       (
         LocationTableData,
-        BaseReferences<
-          _$LocationDatabase,
-          $LocationTableTable,
-          LocationTableData
-        >,
+        BaseReferences<_$LocationDatabase, $LocationTableTable, LocationTableData>,
       ),
       LocationTableData,
       PrefetchHooks Function()
@@ -877,7 +865,8 @@ typedef $$LocationTableTableProcessedTableManager =
 
 class $LocationDatabaseManager {
   final _$LocationDatabase _db;
+
   $LocationDatabaseManager(this._db);
-  $$LocationTableTableTableManager get locationTable =>
-      $$LocationTableTableTableManager(_db, _db.locationTable);
+
+  $$LocationTableTableTableManager get locationTable => $$LocationTableTableTableManager(_db, _db.locationTable);
 }

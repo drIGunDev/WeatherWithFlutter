@@ -15,7 +15,7 @@ class AppNotifier extends Notifier<AppState> {
     return AppState(location: null);
   }
 
-  void setLocation(Location? location) {
+  void setLocation({Location? location}) {
     state = AppState(location: location);
   }
 }

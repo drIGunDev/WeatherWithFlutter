@@ -3,22 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/app_state.dart';
 import '../../app/main.dart';
+import '../../app/themes.dart';
 import '../../services/db/di.dart';
 import '../../services/location/di.dart';
 import '../../services/location/geocoding_service.dart';
-import '../../app/themes.dart';
 import '../../services/open_weather_service/di.dart';
 import '../../services/open_weather_service/weather_service.dart';
 import '../widgets/location_row.dart';
 
-class SelectLocation extends ConsumerStatefulWidget {
-  const SelectLocation({super.key});
+class LocationSelecting extends ConsumerStatefulWidget {
+  const LocationSelecting({super.key});
 
   @override
-  ConsumerState<SelectLocation> createState() => _GeocodingState();
+  ConsumerState<LocationSelecting> createState() => _GeocodingState();
 }
 
-class _GeocodingState extends ConsumerState<SelectLocation> {
+class _GeocodingState extends ConsumerState<LocationSelecting> {
   final TextEditingController _query = TextEditingController();
 
   @override
@@ -70,7 +70,7 @@ class _GeocodingState extends ConsumerState<SelectLocation> {
               ),
               onPressed: () async {
                 final name = _query.text;
-                ref.read(geocodingProvider.notifier).fetchLocations(GeocodingFetchParameters(name: name, count: 20));
+                ref.read(geocodingProvider.notifier).fetchLocations(params: GeocodingFetchParameters(name: name, count: 20));
               },
               child: Text('Search'),
             ),
@@ -98,16 +98,18 @@ class _GeocodingState extends ConsumerState<SelectLocation> {
 
                         const SizedBox(height: 16),
 
-                        for (final location in data.result) ...[LocationRow(location: location,
-                          onTap: () {
-                            ref.read(locationStorageProvider.notifier).add(location: location);
-                            ref.read(meteoProvider.notifier).fetchForecast(MeteoFetchParameters(location: location));
-                            ref.read(appProvider.notifier).setLocation(location);
+                        for (final location in data.result) ...[
+                          LocationRow(
+                            location: location,
+                            onTap: () async {
+                              Navigator.pushReplacementNamed(context, NavigationPaths.root);
 
-                            Navigator.pushReplacementNamed(context, NavigationPaths.root);
-
-                            ref.read(geocodingProvider.notifier).reset();
-                          },)
+                              ref.read(locationStorageProvider.notifier).add(location: location);
+                              ref.read(appProvider.notifier).setLocation(location: location);
+                              ref.read(geocodingProvider.notifier).reset();
+                              await ref.read(meteoProvider.notifier).fetchForecast(params: MeteoFetchParameters(location: location));
+                            },
+                          ),
                         ],
                       ],
                     );
@@ -133,7 +135,7 @@ void main() => runApp(
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.bgSurface,
       ),
-      home: const SelectLocation(),
+      home: const LocationSelecting(),
     ),
   ),
 );

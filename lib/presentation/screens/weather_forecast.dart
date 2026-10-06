@@ -4,32 +4,15 @@ import 'package:weather_with_flutter/presentation/screens/location_storage.dart'
 
 import '../../app/app_state.dart';
 import '../../app/main.dart';
-import '../../services/db/di.dart';
 import '../../services/open_weather_service/di.dart';
-import '../../services/open_weather_service/weather_service.dart';
+import '../../tools/logger/log.dart';
 import '../widgets/location_row.dart';
 
-class WeatherForecast extends ConsumerStatefulWidget {
+class WeatherForecast extends ConsumerWidget {
   const WeatherForecast({super.key});
 
   @override
-  ConsumerState<WeatherForecast> createState() => _WeatherForecast();
-}
-
-class _WeatherForecast extends ConsumerState<WeatherForecast> {
-  @override
-  void initState() {
-    ref.read(locationManagerProvider).findActive().then((activeLocation) {
-      if (activeLocation != null) {
-        ref.read(appProvider.notifier).setLocation(activeLocation);
-        ref.read(meteoProvider.notifier).fetchForecast(MeteoFetchParameters(location: activeLocation));
-      }
-    });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appProvider);
     final weather = ref.watch(meteoProvider);
 
@@ -59,6 +42,7 @@ class _WeatherForecast extends ConsumerState<WeatherForecast> {
               Expanded(
                 child: weather.when(
                   data: (data) {
+                    Log.d('data length: ${data.length} ${(data.isNotEmpty) ? data.first : ''}');
                     return ListView.builder(
                       itemBuilder: (context, i) {
                         return Center(child: Text('${data[i].start} ${data[i].item.type.name}'));

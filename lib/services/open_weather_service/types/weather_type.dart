@@ -36,7 +36,7 @@ enum WeatherType {
 
   static WeatherType fromCode(int code) {
     return WeatherType.values.firstWhere(
-          (value) => value.type == code,
+      (value) => value.type == code,
       orElse: () => throw StateError(
         'Unknown weather type code: $code',
       ),

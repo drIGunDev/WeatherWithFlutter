@@ -33,8 +33,7 @@ class LocationTable extends Table {
 final class LocationDatabase extends _$LocationDatabase {
   static const String databaseName = 'location.sqlite';
 
-  LocationDatabase([NativeDatabase? connection])
-      : super(connection ?? _openConnection());
+  LocationDatabase([NativeDatabase? connection]) : super(connection ?? _openConnection());
 
   @override
   int get schemaVersion => 2;
@@ -45,8 +44,7 @@ final class LocationDatabase extends _$LocationDatabase {
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     },
-    onUpgrade: (m, from, to) async {
-    },
+    onUpgrade: (m, from, to) async {},
   );
 
   Future<void> deleteEverything() => transaction(() async {

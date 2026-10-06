@@ -1,5 +1,5 @@
-import 'types/event.dart';
 import '../location/types/location.dart';
+import 'types/event.dart';
 import 'types/weather_item.dart';
 
 typedef MeteoResult = List<Event<WeatherItem>>;

@@ -1,6 +1,6 @@
 import 'package:logger/logger.dart';
 
-import 'gosignal_printer.dart';
+import 'weather_printer.dart';
 
 final class Log {
   static final Logger _logger = Logger(
@@ -19,11 +19,11 @@ final class Log {
   static void w(Object message, {String? tag}) => _logger.warning(tag, message);
 
   static void e(
-      Object message, {
-        String? tag,
-        Object? error,
-        StackTrace? stackTrace,
-      }) {
+    Object message, {
+    String? tag,
+    Object? error,
+    StackTrace? stackTrace,
+  }) {
     _logger.error(
       tag,
       message,

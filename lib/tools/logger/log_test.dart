@@ -1,4 +1,3 @@
-
 import 'log.dart';
 
 final class LogTest {
@@ -22,6 +21,6 @@ final class LogTest {
 }
 
 void main() {
-    final test = LogTest();
-    test.foo();
+  final test = LogTest();
+  test.foo();
 }

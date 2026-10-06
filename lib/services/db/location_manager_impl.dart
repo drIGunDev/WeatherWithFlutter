@@ -40,21 +40,37 @@ final class LocationManagerImpl({
   required final LocationDatabase _database,
 }) implements LocationManager {
   @override
-  Future<void> add({required Location location}) async {
-    final existing = await _find(id: location.id);
-    if (existing == null) {
-      await _database.into(_database.locationTable).insert(location.toCompanion());
-    }
-    await setActive(location: location);
+  Future<void> add({required Location location, bool activate = true}) async {
+    _database.transaction(() async {
+      final existing = await _find(id: location.id);
+      if (existing == null) {
+        await _database.into(_database.locationTable).insert(location.toCompanion());
+      }
+      if (activate) {
+        await setActive(location: location);
+      }
+    });
   }
 
   @override
   Future<void> remove({required Location location}) async {
-    await (_database.delete(_database.locationTable)..where((tbl) => tbl.id.equals(location.id))).go();
+    _database.transaction(() async {
+      final allLocations = await fetchAll();
+      if (allLocations.isEmpty) return;
+
+      final activeLocation = await findActive();
+      if (activeLocation == location) {
+        final nextActiveLocation = await _findNextActiveTo(location);
+        if (nextActiveLocation != null) {
+          await setActive(location: nextActiveLocation);
+        }
+      }
+      await (_database.delete(_database.locationTable)..where((tbl) => tbl.id.equals(location.id))).go();
+    });
   }
 
   @override
-  Future<void> setActive({required Location location}) {
+  Future<void> setActive({required Location location, bool activate = true}) {
     return _database.transaction(() async {
       await _database
           .update(
@@ -68,6 +84,9 @@ final class LocationManagerImpl({
       )..where((tbl) => tbl.id.equals(location.id))).write(
         LocationTableCompanion(isActive: Value(true)),
       );
+      if (activate) {
+        await setActive(location: location, activate: false);
+      }
     });
   }
 
@@ -89,5 +108,13 @@ final class LocationManagerImpl({
       _database.locationTable,
     )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
     return location?.toLocation();
+  }
+
+  Future<Location?> _findNextActiveTo(Location activeLocation) async {
+    final allLocations = await fetchAll();
+    if (allLocations.isEmpty || allLocations.length == 1) return .empty;
+
+    final index = allLocations.indexOf(activeLocation);
+    return (index == 0) ? allLocations[1] : allLocations[index - 1];
   }
 }

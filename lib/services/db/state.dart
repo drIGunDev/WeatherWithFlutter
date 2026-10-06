@@ -6,38 +6,44 @@ import '../location/types/location.dart';
 import 'di.dart';
 import 'location_manager.dart';
 
-final class LocationsStorageState({required final Locations locations});
+final class LocationsStorageState({
+  required final Locations locations,
+  required final Location? activeLocation,
+});
 
 class LocationStorageNotifier extends AsyncNotifier<LocationsStorageState> {
   @override
   Future<LocationsStorageState> build() async {
-    return  LocationsStorageState(locations: await ref.read(locationManagerProvider).fetchAll()); //Future.value(LocationsStorageState(locations: [])); //
+    return LocationsStorageState(
+      locations: await ref.read(locationManagerProvider).fetchAll(),
+      activeLocation: await ref.read(locationManagerProvider).findActive(),
+    );
   }
 
-  Future<void> add({required Location location}) async {
-    await ref.read(locationManagerProvider).add(location: location);
-    await _refresh();
+  Future<int> add({required Location location, bool activate = true}) async {
+    await ref.read(locationManagerProvider).add(location: location, activate: true);
+    return await _refresh();
   }
 
-  Future<void> remove({required Location location}) async {
+  Future<int> remove({required Location location}) async {
     await ref.read(locationManagerProvider).remove(location: location);
-    await _refresh();
+    return await _refresh();
   }
 
-  Future<void> setActive({required Location location}) async {
+  Future<int> setActive({required Location location}) async {
     await ref.read(locationManagerProvider).setActive(location: location);
-    await _refresh();
+    return await _refresh();
   }
 
-  Future<Location?> findActive() async {
-    final location = await ref.read(locationManagerProvider).findActive();
-    return location;
-  }
-
-  Future<void> _refresh() async{
-    final manager = ref.read(locationManagerProvider);
+  Future<int> _refresh() async {
     state = const AsyncValue.loading();
-    final value = await AsyncValue.guard(() async => LocationsStorageState(locations: await manager.fetchAll()));
-    state = value;
+    state = await AsyncValue.guard(() async {
+      final manager = ref.read(locationManagerProvider);
+      return LocationsStorageState(
+        locations: await manager.fetchAll(),
+        activeLocation: await manager.findActive(),
+      );
+    });
+    return state.value?.locations.length ?? 0;
   }
 }

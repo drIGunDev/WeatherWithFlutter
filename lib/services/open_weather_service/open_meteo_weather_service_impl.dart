@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'weather_service.dart';
+import '../../tools/logger/log.dart';
 import 'types/event.dart';
 import 'types/precipitation.dart';
 import 'types/temperature.dart';
 import 'types/weather_item.dart';
 import 'types/weather_type.dart';
 import 'types/wind.dart';
+import 'weather_service.dart';
 
 typedef WeatherApiRequestObserver = void Function(Uri uri, {int? statusCode});
 
@@ -34,6 +35,7 @@ final class OpenMeteoWeatherServiceImpl implements WeatherService {
       'past_days': '${params.pastDays}',
       'forecast_days': '${params.forecastDays}',
     });
+    Log.d('request: $uri');
     final response = await _send(uri);
 
     return switch (response.statusCode) {

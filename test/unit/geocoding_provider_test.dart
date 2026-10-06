@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weather_with_flutter/services/location/di.dart';
 import 'package:weather_with_flutter/services/location/geocoding_service.dart';
+import 'package:weather_with_flutter/tools/logger/log.dart';
 
 void main() {
   test('test geocoding provider', () async {
@@ -10,7 +11,7 @@ void main() {
     final geocoding = container.read(geocodingServiceProvider);
     final locations = await geocoding.fetchLocations(params: GeocodingFetchParameters(name: 'London'));
     if (kDebugMode) {
-      print(locations);
+      Log.d(locations);
     }
     assert(locations.isNotEmpty);
   });

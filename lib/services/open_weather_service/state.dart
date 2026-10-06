@@ -10,7 +10,7 @@ final class MeteoNotifier extends AsyncNotifier<MeteoResult> {
     return Future.value([]);
   }
 
-  Future<void> fetchForecast(MeteoFetchParameters params) async {
+  Future<void> fetchForecast({required MeteoFetchParameters params}) async {
     if (params.location.latitude == 0 && params.location.longitude == 0) {
       state = const AsyncValue.data([]);
       return;
