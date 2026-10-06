@@ -18,6 +18,7 @@ final class Location {
   final String city;
   final String timezone;
   final bool isActive;
+  final DateTime? weatherUpdatedAt;
 
   Location({
     LocationId? id,
@@ -29,6 +30,7 @@ final class Location {
     required this.city,
     required this.timezone,
     this.isActive = false,
+    this.weatherUpdatedAt,
   }) : id = id ?? const UuidIdGenerator().generate();
 
   factory Location.short({
@@ -37,6 +39,7 @@ final class Location {
     required String name,
     int revisionId = 0,
     bool isActive = false,
+    DateTime? weatherUpdatedAt,
   }) {
     return Location(
       id: null,
@@ -48,12 +51,28 @@ final class Location {
       city: '',
       timezone: '',
       isActive: isActive,
+      weatherUpdatedAt: weatherUpdatedAt,
+    );
+  }
+
+  Location copyWith(DateTime? weatherUpdatedAt) {
+    return Location(
+      id: id,
+      latitude: latitude,
+      longitude: longitude,
+      name: name,
+      country: country,
+      countryCode: countryCode,
+      city: city,
+      timezone: timezone,
+      isActive: isActive,
+      weatherUpdatedAt: weatherUpdatedAt,
     );
   }
 
   @override
   String toString() {
-    return 'Location{id: $id, latitude: $latitude, longitude: $longitude, name: $name, country: $country, countryCode: $countryCode, city: $city, timezone: $timezone, isActive: $isActive}';
+    return 'Location{id: $id, latitude: $latitude, longitude: $longitude, name: $name, country: $country, countryCode: $countryCode, city: $city, timezone: $timezone, isActive: $isActive, weatherUpdatedAt: $weatherUpdatedAt}';
   }
 
   @override

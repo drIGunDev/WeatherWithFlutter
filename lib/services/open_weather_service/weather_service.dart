@@ -2,7 +2,7 @@ import '../location/types/location.dart';
 import 'types/event.dart';
 import 'types/weather_item.dart';
 
-typedef MeteoResult = List<Event<WeatherItem>>;
+typedef MeteoForecast = List<Event<WeatherItem>>;
 
 final class MeteoFetchParameters({
   required final Location location,
@@ -11,5 +11,5 @@ final class MeteoFetchParameters({
 });
 
 abstract interface class WeatherService {
-  Future<MeteoResult> fetchForecast({required MeteoFetchParameters params});
+  Future<MeteoForecast> fetchForecast({required MeteoFetchParameters params});
 }

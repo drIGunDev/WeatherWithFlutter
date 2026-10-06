@@ -1,8 +1,8 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:weather_with_flutter/services/db/location_db.dart';
+import 'package:weather_with_flutter/services/db/weather_db.dart';
 import 'package:weather_with_flutter/services/db/location_manager.dart';
-import 'package:weather_with_flutter/services/db/location_manager_impl.dart';
+import 'package:weather_with_flutter/services/db/database_manager_impl.dart';
 import 'package:weather_with_flutter/services/location/types/location.dart';
 import 'package:weather_with_flutter/tools/logger/log.dart';
 
@@ -29,11 +29,11 @@ void main() {
     timezone: 'Europe/London',
   );
 
-  late final LocationDatabase db;
+  late final WeatherDatabase db;
   late final LocationManager manager;
   setUp(() async {
-    db = LocationDatabase(NativeDatabase.memory());
-    manager = LocationManagerImpl(database: db);
+    db = WeatherDatabase(NativeDatabase.memory());
+    manager = DatabaseManagerImpl(database: db);
   });
 
   tearDown(() async {
@@ -41,8 +41,8 @@ void main() {
   });
 
   test('test location storage', () async {
-    await manager.add(location: berlin);
-    await manager.add(location: london);
+    await manager.addLocation(location: berlin);
+    await manager.addLocation(location: london);
     await manager.setActive(location: berlin);
     var locations = await manager.fetchAll();
     Log.d(locations);

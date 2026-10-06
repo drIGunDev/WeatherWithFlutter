@@ -25,7 +25,7 @@ final class OpenMeteoWeatherServiceImpl implements WeatherService {
   const OpenMeteoWeatherServiceImpl({required this._client, this._onRequest});
 
   @override
-  Future<MeteoResult> fetchForecast({required MeteoFetchParameters params}) async {
+  Future<MeteoForecast> fetchForecast({required MeteoFetchParameters params}) async {
     final uri = Uri.https('api.open-meteo.com', '/v1/forecast', {
       'latitude': params.location.latitude.toString(),
       'longitude': params.location.longitude.toString(),

@@ -45,7 +45,7 @@ class LocationStorage extends ConsumerWidget {
                           final results = await ref.read(locationStorageProvider.future);
                           if (results.locations.isEmpty) {
                             ref.read(appProvider.notifier).setLocation(location: .empty);
-                            await ref.read(meteoProvider.notifier).reset();
+                            await ref.read(meteoProvider.notifier).clear(location: location);
                             return;
                           }
                           final activeLocation = results.activeLocation;

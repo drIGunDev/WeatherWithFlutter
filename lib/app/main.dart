@@ -15,8 +15,12 @@ abstract interface class NavigationPaths {
   static const String selectLocation = '/select_location';
 }
 
+abstract interface class AppParams {
+  static const int updateIntervalSec = 60 * 60;
+}
+
 Future<void> initializing(WidgetRef ref) async {
-  final activeLocation = await ref.read(locationManagerProvider).findActive();
+  final activeLocation = await ref.read(locationDatabaseProvider).findActive();
   if (activeLocation != null) {
     ref.read(appProvider.notifier).setLocation(location: activeLocation);
     await ref.read(meteoProvider.notifier).fetchForecast(params: MeteoFetchParameters(location: activeLocation));

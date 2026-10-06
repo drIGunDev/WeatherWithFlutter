@@ -1,16 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather_with_flutter/services/db/state.dart';
 
-import 'location_db.dart';
+import 'database_manager_impl.dart';
+import 'forecast_manager.dart';
 import 'location_manager.dart';
-import 'location_manager_impl.dart';
+import 'weather_db.dart';
 
-final locationDatabaseProvider = Provider<LocationDatabase>((ref) {
-  return LocationDatabase();
+final weatherDatabaseProvider = Provider<WeatherDatabase>((ref) {
+  return WeatherDatabase();
 });
 
-final locationManagerProvider = Provider<LocationManager>((ref) {
-  return LocationManagerImpl(database: ref.read(locationDatabaseProvider));
+final locationDatabaseProvider = Provider<LocationManager>((ref) {
+  return DatabaseManagerImpl(database: ref.read(weatherDatabaseProvider));
 });
 
 final locationStorageProvider = AsyncNotifierProvider<LocationStorageNotifier, LocationsStorageState>(LocationStorageNotifier.new);
+
+final forecastDatabaseProvider = Provider<ForecastManager>((ref) {
+  return DatabaseManagerImpl(database: ref.read(weatherDatabaseProvider));
+});

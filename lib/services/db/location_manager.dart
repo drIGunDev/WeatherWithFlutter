@@ -3,7 +3,7 @@ import '../location/types/location.dart';
 typedef Locations = List<Location>;
 
 abstract interface class LocationManager {
-  Future<void> add({required Location location, bool activate = true});
+  Future<void> addLocation({required Location location, bool activate = true});
 
   Future<void> remove({required Location location});
 

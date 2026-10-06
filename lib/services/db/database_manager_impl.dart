@@ -1,0 +1,259 @@
+import 'package:drift/drift.dart';
+import 'package:weather_with_flutter/services/location/types/location.dart';
+import 'package:weather_with_flutter/services/open_weather_service/weather_service.dart';
+
+import '../open_weather_service/types/event.dart';
+import '../open_weather_service/types/precipitation.dart';
+import '../open_weather_service/types/temperature.dart';
+import '../open_weather_service/types/weather_item.dart';
+import '../open_weather_service/types/weather_type.dart';
+import '../open_weather_service/types/wind.dart';
+import 'forecast_manager.dart';
+import 'weather_db.dart';
+import 'location_manager.dart';
+
+extension _ToCompanion on Location {
+  LocationTableCompanion toCompanion() {
+    return LocationTableCompanion.insert(
+      id: id,
+      name: name,
+      latitude: latitude,
+      longitude: longitude,
+      country: country,
+      countryCode: countryCode,
+      city: city,
+      timezone: timezone,
+      isActive: Value(isActive),
+      weatherUpdatedAt: Value(weatherUpdatedAt),
+    );
+  }
+}
+
+extension _FromCompanion on LocationTableData {
+  Location toLocation() {
+    return Location(
+      id: id,
+      name: name,
+      latitude: latitude,
+      longitude: longitude,
+      country: country,
+      countryCode: countryCode,
+      city: city,
+      timezone: timezone,
+      isActive: isActive,
+      weatherUpdatedAt: weatherUpdatedAt,
+    );
+  }
+}
+
+extension _ToWeatherItem on WeatherTableData {
+  WeatherItem toWeatherItem(Location location) {
+    return WeatherItem(
+      type: WeatherType.fromCode(type),
+      temperature: Temperature.fromCelsius(temperature),
+      apparentTemperature: Temperature.fromCelsius(apparentTemperature),
+      wind: Wind(
+        forceKmPerHour: windForce,
+        gustsKmPerHour: windGusts,
+        directionGrad: windDirectionGrad,
+      ),
+      location: location,
+      precipitation: Precipitation(
+        probabilityPercent: precipitationPercent,
+        amountMm: precipitationAmountMm,
+        rain: rain,
+      ),
+    );
+  }
+}
+
+extension _ToEvent on WeatherTableData {
+  Event<WeatherItem> toEvent(Location location) {
+    return Event(
+      start: start,
+      end: end,
+      item: toWeatherItem(location),
+    );
+  }
+}
+
+extension _ToWeatherItemCompanion on WeatherItem {
+  WeatherTableCompanion toCompanion(Time start, Time end, Location location) {
+    return WeatherTableCompanion.insert(
+      start: start,
+      end: end,
+      type: type.type,
+      temperature: temperature.celsius,
+      apparentTemperature: apparentTemperature.celsius,
+      windForce: wind.forceKmPerHour,
+      windGusts: wind.gustsKmPerHour,
+      windDirectionGrad: wind.directionGrad,
+      precipitationPercent: precipitation.probabilityPercent,
+      precipitationAmountMm: precipitation.amountMm,
+      rain: precipitation.rain,
+      locationId: location.id,
+    );
+  }
+}
+
+///
+/// Implementation of [LocationManager] and [ForecastManager]
+///
+final class DatabaseManagerImpl({
+  required final WeatherDatabase _database,
+}) implements LocationManager, ForecastManager {
+  @override
+  Future<void> addLocation({required Location location, bool activate = true}) async {
+    _database.transaction(() async {
+      final existing = await _find(id: location.id);
+      if (existing == null) {
+        await _database.into(_database.locationTable).insert(location.toCompanion());
+      }
+      if (activate) {
+        await setActive(location: location);
+      }
+    });
+  }
+
+  @override
+  Future<void> remove({required Location location}) async {
+    _database.transaction(() async {
+      final allLocations = await fetchAll();
+      if (allLocations.isEmpty) return;
+
+      final activeLocation = await findActive();
+      if (activeLocation == location) {
+        final nextActiveLocation = await _findNextActiveTo(location);
+        if (nextActiveLocation != null) {
+          await setActive(location: nextActiveLocation);
+        }
+      }
+      await (_database.delete(_database.locationTable)..where((tbl) => tbl.id.equals(location.id))).go();
+    });
+  }
+
+  @override
+  Future<void> setActive({required Location location, bool activate = true}) {
+    return _database.transaction(() async {
+      await _database
+          .update(
+            _database.locationTable,
+          )
+          .write(
+            LocationTableCompanion(isActive: Value(false)),
+          );
+      await (_database.update(
+        _database.locationTable,
+      )..where((tbl) => tbl.id.equals(location.id))).write(
+        LocationTableCompanion(isActive: Value(true)),
+      );
+      if (activate) {
+        await setActive(location: location, activate: false);
+      }
+    });
+  }
+
+  @override
+  Future<Location?> findActive() async {
+    final location = await (_database.select(
+      _database.locationTable,
+    )..where((tbl) => tbl.isActive.equals(true))).getSingleOrNull();
+    return location?.toLocation();
+  }
+
+  @override
+  Future<Locations> fetchAll() {
+    return _database.select(_database.locationTable).get().then((value) => value.map((e) => e.toLocation()).toList());
+  }
+
+  Future<Location?> _find({required String id}) async {
+    final location = await (_database.select(
+      _database.locationTable,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+    return location?.toLocation();
+  }
+
+  Future<Location?> _findNextActiveTo(Location activeLocation) async {
+    final allLocations = await fetchAll();
+    if (allLocations.isEmpty || allLocations.length == 1) return .empty;
+
+    final index = allLocations.indexOf(activeLocation);
+    return (index == 0) ? allLocations[1] : allLocations[index - 1];
+  }
+
+  @override
+  Future<void> updateForecast({required Location location, required MeteoForecast forecast}) async {
+    final savedLocation = await _findLocationById(location.id);
+    if (savedLocation == null) {
+      await addLocation(location: location.copyWith(DateTime.now()), activate: false);
+    } else {
+      await _updateLocation(location.copyWith(DateTime.now()));
+    }
+
+    await _database.transaction(() async {
+      await deleteForecast(location: location);
+      await _database.batch((batch) {
+        for (final e in forecast) {
+          batch.insert(
+            _database.weatherTable,
+            e.item.toCompanion(e.start, e.end, location),
+          );
+        }
+      });
+    });
+  }
+
+  @override
+  Future<MeteoForecast> fetchForecast({required Location location}) async {
+    final list = await _fetchForecast(location);
+    return list.map((e) => e.toEvent(location)).toList();
+  }
+
+  @override
+  Future<bool> haveToUpdateForecast({required String locationId, required int updateIntervalSec}) async {
+    final location = await _findLocationById(locationId);
+    if (location == null) return true;
+    final forecast = await _fetchForecast(location);
+    if (forecast.isEmpty) return true;
+    if (location.weatherUpdatedAt == null) return true;
+    return DateTime.now().difference(location.weatherUpdatedAt!).inSeconds > updateIntervalSec;
+  }
+
+  @override
+  Future<void> deleteForecast({required Location location}) {
+    return _database.transaction(() async {
+      await _updateLocation(location.copyWith(null));
+      (_database.delete(
+        _database.weatherTable,
+      )
+        ..where((tbl) => tbl.locationId.equals(location.id))).go();
+    });
+  }
+
+  Future<List<WeatherTableData>> _fetchForecast(Location location) {
+    return (_database.select(_database.weatherTable)
+      ..where((tbl) => tbl.locationId.equals(location.id))
+      ..orderBy([
+            (tbl) => OrderingTerm(expression: tbl.id, mode: OrderingMode.asc),
+      ]))
+        .get();
+  }
+
+  Future<Location?> _findLocationById(String locationId) async {
+    final item = await (_database.select(
+      _database.locationTable,
+    )..where((tbl) => tbl.id.equals(locationId))).getSingleOrNull();
+    if (item == null) return null;
+    return item.toLocation();
+  }
+
+  Future<void> _updateLocation(Location location) async {
+    await (_database.update(
+      _database.locationTable,
+    )..where((tbl) => tbl.id.equals(location.id))).write(
+      LocationTableCompanion(
+        weatherUpdatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+}

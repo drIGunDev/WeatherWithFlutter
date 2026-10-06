@@ -2,7 +2,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weather_with_flutter/services/db/di.dart';
-import 'package:weather_with_flutter/services/db/location_db.dart';
+import 'package:weather_with_flutter/services/db/weather_db.dart';
 import 'package:weather_with_flutter/services/location/types/location.dart';
 import 'package:weather_with_flutter/tools/logger/log.dart';
 
@@ -33,7 +33,7 @@ void main() {
 
     final container = ProviderContainer.test(
       overrides: [
-        locationDatabaseProvider.overrideWithValue(LocationDatabase(NativeDatabase.memory())),
+        weatherDatabaseProvider.overrideWithValue(WeatherDatabase(NativeDatabase.memory())),
       ],
     );
 

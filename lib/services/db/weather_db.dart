@@ -4,7 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 
-part 'location_db.g.dart';
+part 'weather_db.g.dart';
 
 class LocationTable extends Table {
   TextColumn get id => text()();
@@ -25,18 +25,49 @@ class LocationTable extends Table {
 
   BoolColumn get isActive => boolean().withDefault(const Constant(false))();
 
+  DateTimeColumn get weatherUpdatedAt => dateTime().nullable().withDefault(const Constant(null))();
+
   @override
   Set<Column> get primaryKey => {id};
 }
 
-@DriftDatabase(tables: [LocationTable])
-final class LocationDatabase extends _$LocationDatabase {
-  static const String databaseName = 'location.sqlite';
+class WeatherTable extends Table {
+  IntColumn get id => integer().autoIncrement()();
 
-  LocationDatabase([NativeDatabase? connection]) : super(connection ?? _openConnection());
+  DateTimeColumn get start => dateTime()();
+
+  DateTimeColumn get end => dateTime()();
+
+  IntColumn get type => integer()();
+
+  RealColumn get temperature => real()();
+
+  RealColumn get apparentTemperature => real()();
+
+  RealColumn get windForce => real()();
+
+  RealColumn get windGusts => real()();
+
+  RealColumn get windDirectionGrad => real()();
+
+  RealColumn get precipitationPercent => real()();
+
+  RealColumn get precipitationAmountMm => real()();
+
+  RealColumn get rain => real()();
+
+  TextColumn get locationId =>
+      text().references(LocationTable, #id, onDelete: .cascade)();
+}
+
+@DriftDatabase(tables: [LocationTable, WeatherTable])
+final class WeatherDatabase extends _$WeatherDatabase {
+  static const String databaseName = 'weather.sqlite';
+
+  WeatherDatabase([NativeDatabase? connection]) : super(connection ?? _openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 1;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
