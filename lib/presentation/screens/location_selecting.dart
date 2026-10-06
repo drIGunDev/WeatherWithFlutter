@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/app_state.dart';
+import '../../app/app_notifier.dart';
 import '../../app/main.dart';
 import '../../app/themes.dart';
 import '../../services/db/di.dart';

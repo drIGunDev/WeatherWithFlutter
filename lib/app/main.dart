@@ -7,7 +7,7 @@ import '../presentation/screens/weather_forecast.dart';
 import '../services/db/di.dart';
 import '../services/open_weather_service/di.dart';
 import '../services/open_weather_service/weather_service.dart';
-import 'app_state.dart';
+import 'app_notifier.dart';
 
 abstract interface class NavigationPaths {
   static const String root = '/';

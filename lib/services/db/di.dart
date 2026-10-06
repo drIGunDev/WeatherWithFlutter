@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:weather_with_flutter/services/db/state.dart';
+import 'package:weather_with_flutter/services/db/location_storage_notifier.dart';
 
 import 'database_manager_impl.dart';
 import 'forecast_manager.dart';

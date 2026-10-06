@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather_with_flutter/presentation/screens/location_selecting.dart';
 import 'package:weather_with_flutter/presentation/widgets/location_row.dart';
 
-import '../../app/app_state.dart';
+import '../../app/app_notifier.dart';
 import '../../app/main.dart';
 import '../../services/db/di.dart';
 import '../../services/open_weather_service/di.dart';
