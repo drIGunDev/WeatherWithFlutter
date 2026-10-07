@@ -4,18 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/themes.dart';
 import '../../services/location/types/location.dart';
 
-class LocationRow extends StatelessWidget {
-  final Location? _location;
-  final void Function()? _onDelete;
-  final void Function()? _onTap;
-
-  const LocationRow({
-    super.key,
-    required this._location,
-    this._onDelete,
-    this._onTap,
-  });
-
+class const LocationRow({
+  super.key,
+  required final Location? _location,
+  final void Function()? _onDelete,
+  final void Function()? _onTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(

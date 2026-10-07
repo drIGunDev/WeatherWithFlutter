@@ -7,7 +7,6 @@ import '../presentation/screens/weather_forecast.dart';
 import '../services/db/di.dart';
 import '../services/open_weather_service/di.dart';
 import '../services/open_weather_service/weather_service.dart';
-import 'app_notifier.dart';
 
 abstract interface class NavigationPaths {
   static const String root = '/';
@@ -22,7 +21,6 @@ abstract interface class AppParams {
 Future<void> initializing(WidgetRef ref) async {
   final activeLocation = await ref.read(locationDatabaseProvider).findActive();
   if (activeLocation != null) {
-    ref.read(appProvider.notifier).setLocation(location: activeLocation);
     await ref.read(meteoProvider.notifier).fetchForecast(params: MeteoFetchParameters(location: activeLocation));
   }
 }

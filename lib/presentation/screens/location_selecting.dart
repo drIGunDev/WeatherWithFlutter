@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/app_notifier.dart';
 import '../../app/main.dart';
 import '../../app/themes.dart';
 import '../../services/db/di.dart';
@@ -104,10 +103,10 @@ class _GeocodingState extends ConsumerState<LocationSelecting> {
                             onTap: () async {
                               Navigator.pushReplacementNamed(context, NavigationPaths.root);
 
-                              ref.read(locationStorageProvider.notifier).add(location: location);
-                              ref.read(appProvider.notifier).setLocation(location: location);
+                              final selectedLocation = location.copyWith(DateTime.now());
+                              ref.read(locationStorageProvider.notifier).add(location: selectedLocation);
                               ref.read(geocodingProvider.notifier).reset();
-                              await ref.read(meteoProvider.notifier).fetchForecast(params: MeteoFetchParameters(location: location));
+                              await ref.read(meteoProvider.notifier).fetchForecast(params: MeteoFetchParameters(location: selectedLocation));
                             },
                           ),
                         ],

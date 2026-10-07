@@ -10,4 +10,4 @@ final meteoServiceProvider = Provider<WeatherService>((ref) {
   return meteoService;
 });
 
-final meteoProvider = AsyncNotifierProvider<MeteoNotifier, MeteoForecast>(MeteoNotifier.new);
+final meteoProvider = AsyncNotifierProvider<MeteoNotifier, MeteoForecastState>(MeteoNotifier.new);

@@ -11,5 +11,7 @@ abstract interface class LocationManager {
 
   Future<Location?> findActive();
 
+  Future<Location?> findLocationById(String locationId);
+
   Future<Locations> fetchAll();
 }

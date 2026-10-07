@@ -40,7 +40,7 @@ void main() {
     final storage = container.read(locationStorageProvider.notifier);
     await storage.add(location: berlin, activate: false);
     await storage.add(location: london, activate: false);
-    await storage.setActive(location: berlin);
+    // await storage.setActive(location: berlin);
     var state = await container.read(locationStorageProvider.future);
     Log.d(state);
     assert(state.locations.isNotEmpty);

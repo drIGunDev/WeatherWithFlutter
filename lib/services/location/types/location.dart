@@ -87,8 +87,18 @@ final class Location {
           country == other.country &&
           countryCode == other.countryCode &&
           city == other.city &&
+          weatherUpdatedAt == other.weatherUpdatedAt &&
           timezone == other.timezone;
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode =>
+      id.hashCode ^
+      latitude.hashCode ^
+      longitude.hashCode ^
+      name.hashCode ^
+      country.hashCode ^
+      countryCode.hashCode ^
+      city.hashCode ^
+      timezone.hashCode ^
+      weatherUpdatedAt.hashCode;
 }

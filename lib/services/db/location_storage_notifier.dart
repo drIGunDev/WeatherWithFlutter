@@ -30,11 +30,6 @@ class LocationStorageNotifier extends AsyncNotifier<LocationsStorageState> {
     return await _refresh();
   }
 
-  Future<int> setActive({required Location location}) async {
-    await ref.read(locationDatabaseProvider).setActive(location: location);
-    return await _refresh();
-  }
-
   Future<int> _refresh() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {

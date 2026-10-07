@@ -183,7 +183,7 @@ final class DatabaseManagerImpl({
 
   @override
   Future<void> updateForecast({required Location location, required MeteoForecast forecast}) async {
-    final savedLocation = await _findLocationById(location.id);
+    final savedLocation = await findLocationById(location.id);
     if (savedLocation == null) {
       await addLocation(location: location.copyWith(DateTime.now()), activate: false);
     } else {
@@ -211,7 +211,7 @@ final class DatabaseManagerImpl({
 
   @override
   Future<bool> haveToUpdateForecast({required String locationId, required int updateIntervalSec}) async {
-    final location = await _findLocationById(locationId);
+    final location = await findLocationById(locationId);
     if (location == null) return true;
     final forecast = await _fetchForecast(location);
     if (forecast.isEmpty) return true;
@@ -229,6 +229,15 @@ final class DatabaseManagerImpl({
     });
   }
 
+  @override
+  Future<Location?> findLocationById(String locationId) async {
+    final item = await (_database.select(
+      _database.locationTable,
+    )..where((tbl) => tbl.id.equals(locationId))).getSingleOrNull();
+    if (item == null) return null;
+    return item.toLocation();
+  }
+
   Future<List<WeatherTableData>> _fetchForecast(Location location) {
     return (_database.select(_database.weatherTable)
           ..where((tbl) => tbl.locationId.equals(location.id))
@@ -236,14 +245,6 @@ final class DatabaseManagerImpl({
             (tbl) => OrderingTerm(expression: tbl.id, mode: OrderingMode.asc),
           ]))
         .get();
-  }
-
-  Future<Location?> _findLocationById(String locationId) async {
-    final item = await (_database.select(
-      _database.locationTable,
-    )..where((tbl) => tbl.id.equals(locationId))).getSingleOrNull();
-    if (item == null) return null;
-    return item.toLocation();
   }
 
   Future<void> _updateLocation(Location location) async {

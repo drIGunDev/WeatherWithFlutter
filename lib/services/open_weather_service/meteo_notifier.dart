@@ -8,10 +8,17 @@ import '../../app/main.dart';
 import '../db/di.dart';
 import '../location/types/location.dart';
 
-final class MeteoNotifier extends AsyncNotifier<MeteoForecast> {
+final class const MeteoForecastState({
+  required final MeteoForecast forecast,
+  required final Location? location,
+}) {
+  static const MeteoForecastState empty = MeteoForecastState(forecast: [], location: null);
+}
+
+final class MeteoNotifier extends AsyncNotifier<MeteoForecastState> {
   @override
-  FutureOr<MeteoForecast> build() {
-    return Future.value([]);
+  FutureOr<MeteoForecastState> build() {
+    return Future.value(.empty);
   }
 
   Future<void> fetchForecast({required MeteoFetchParameters params}) async {
@@ -20,7 +27,7 @@ final class MeteoNotifier extends AsyncNotifier<MeteoForecast> {
 
     if (haveToUpdate) {
       if (params.location.latitude == 0 && params.location.longitude == 0) {
-        state = const AsyncValue.data([]);
+        state = const AsyncValue.data(.empty);
         return;
       }
       state = AsyncValue.loading();
@@ -28,18 +35,21 @@ final class MeteoNotifier extends AsyncNotifier<MeteoForecast> {
         final provider = ref.read(meteoServiceProvider);
         final forecast = await provider.fetchForecast(params: params);
         await forecastProvider.updateForecast(location: params.location, forecast: forecast);
-        return forecast;
+        return MeteoForecastState(forecast: forecast, location: params.location.copyWith(DateTime.now()));
       });
     } else {
       state = AsyncValue.loading();
       state = await AsyncValue.guard(() async {
-        return await forecastProvider.fetchForecast(location: params.location);
+        final locationManager = ref.read(locationDatabaseProvider);
+        final forecast = await forecastProvider.fetchForecast(location: params.location);
+        final location = await locationManager.findLocationById(params.location.id);
+        return MeteoForecastState(forecast: forecast, location: location);
       });
     }
   }
 
   Future<void> clear({required Location location}) async {
-    state = const AsyncValue.data([]);
+    state = AsyncValue.data(.empty);
     final forecastProvider = ref.read(forecastDatabaseProvider);
     await forecastProvider.deleteForecast(location: location);
   }
