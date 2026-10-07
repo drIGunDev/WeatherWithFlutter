@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/di.dart';
 import '../../app/main.dart';
 import '../../app/themes.dart';
-import '../../services/db/di.dart';
-import '../../services/location/di.dart';
 import '../../services/location/geocoding_service.dart';
-import '../../services/open_weather_service/di.dart';
 import '../../services/open_weather_service/weather_service.dart';
 import '../widgets/location_row.dart';
 
@@ -103,10 +101,12 @@ class _GeocodingState extends ConsumerState<LocationSelecting> {
                             onTap: () async {
                               Navigator.pushReplacementNamed(context, NavigationPaths.root);
 
-                              final selectedLocation = location.copyWith(DateTime.now());
-                              ref.read(locationStorageProvider.notifier).add(location: selectedLocation);
+                              final selectedLocation = location.copyWith(weatherUpdatedAt: DateTime.now(), isActive: true);
+                              ref.read(locationStorageProvider.notifier).addate(location: selectedLocation);
                               ref.read(geocodingProvider.notifier).reset();
-                              await ref.read(meteoProvider.notifier).fetchForecast(params: MeteoFetchParameters(location: selectedLocation));
+                              await ref
+                                  .read(weatherForecastProvider.notifier)
+                                  .fetchForecast(params: WeatherForecastFetchParameters(location: selectedLocation));
                             },
                           ),
                         ],

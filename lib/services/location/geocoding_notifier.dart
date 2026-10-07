@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'di.dart';
+import '../../app/di.dart';
 import 'geocoding_service.dart';
 
 class const GeocodingState({required final GeocodingResult result});

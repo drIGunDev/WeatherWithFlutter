@@ -1,15 +1,16 @@
+import '../../app/main.dart';
 import '../location/types/location.dart';
 import 'types/event.dart';
 import 'types/weather_item.dart';
 
-typedef MeteoForecast = List<Event<WeatherItem>>;
+typedef ForecastList = List<Event<WeatherItem>>;
 
-final class MeteoFetchParameters({
+final class WeatherForecastFetchParameters({
   required final Location location,
-  final int forecastDays = 10,
-  final int pastDays = 0,
+  final int forecastDays = AppParams.forecastDays,
+  final int pastDays = AppParams.pastDays,
 });
 
 abstract interface class WeatherService {
-  Future<MeteoForecast> fetchForecast({required MeteoFetchParameters params});
+  Future<ForecastList> fetchForecast({required WeatherForecastFetchParameters params});
 }

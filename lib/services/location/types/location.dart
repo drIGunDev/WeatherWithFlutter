@@ -55,7 +55,10 @@ final class Location {
     );
   }
 
-  Location copyWith(DateTime? weatherUpdatedAt) {
+  Location copyWith({
+    DateTime? weatherUpdatedAt,
+    bool isActive = false,
+  }) {
     return Location(
       id: id,
       latitude: latitude,
@@ -66,7 +69,7 @@ final class Location {
       city: city,
       timezone: timezone,
       isActive: isActive,
-      weatherUpdatedAt: weatherUpdatedAt,
+      weatherUpdatedAt: weatherUpdatedAt ?? this.weatherUpdatedAt,
     );
   }
 

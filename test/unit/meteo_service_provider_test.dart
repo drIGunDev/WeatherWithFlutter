@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:weather_with_flutter/app/di.dart';
 import 'package:weather_with_flutter/services/location/types/location.dart';
-import 'package:weather_with_flutter/services/open_weather_service/di.dart';
 import 'package:weather_with_flutter/services/open_weather_service/weather_service.dart';
 import 'package:weather_with_flutter/tools/logger/log.dart';
 
@@ -10,7 +10,7 @@ void main() {
     final container = ProviderContainer.test();
     final meteo = container.read(meteoServiceProvider);
     final result = await meteo.fetchForecast(
-      params: MeteoFetchParameters(
+      params: WeatherForecastFetchParameters(
         location: Location(
           id: 'berlin',
           name: 'Berlin',

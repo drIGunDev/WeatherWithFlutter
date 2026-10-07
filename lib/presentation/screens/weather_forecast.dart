@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather_with_flutter/presentation/screens/location_storage.dart';
 
+import '../../app/di.dart';
 import '../../app/main.dart';
-import '../../services/db/last_update_counter.dart';
-import '../../services/open_weather_service/di.dart';
+import '../../db/last_update_counter.dart';
 import '../../tools/logger/log.dart';
 import '../widgets/location_row.dart';
 
@@ -13,7 +13,7 @@ class WeatherForecast extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final weather = ref.watch(meteoProvider);
+    final weather = ref.watch(weatherForecastProvider);
 
     return Scaffold(
       appBar: AppBar(

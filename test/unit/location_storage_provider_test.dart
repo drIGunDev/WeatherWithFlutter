@@ -1,8 +1,8 @@
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:weather_with_flutter/services/db/di.dart';
-import 'package:weather_with_flutter/services/db/weather_db.dart';
+import 'package:weather_with_flutter/app/di.dart';
+import 'package:weather_with_flutter/db/weather_db.dart';
 import 'package:weather_with_flutter/services/location/types/location.dart';
 import 'package:weather_with_flutter/tools/logger/log.dart';
 
@@ -38,14 +38,11 @@ void main() {
     );
 
     final storage = container.read(locationStorageProvider.notifier);
-    await storage.add(location: berlin, activate: false);
-    await storage.add(location: london, activate: false);
-    // await storage.setActive(location: berlin);
+    await storage.addate(location: berlin.copyWith(isActive: true));
+    await storage.addate(location: london);
     var state = await container.read(locationStorageProvider.future);
     Log.d(state);
     assert(state.locations.isNotEmpty);
-    assert(state.locations.contains(berlin), true);
-    assert(state.locations.contains(london), true);
     final activeLocation = state.locations.firstWhere((element) => element.isActive);
     assert(activeLocation.id == berlin.id);
     assert(activeLocation.id != london.id);

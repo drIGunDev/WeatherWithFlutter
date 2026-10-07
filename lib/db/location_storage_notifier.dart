@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../location/types/location.dart';
-import 'di.dart';
-import 'location_manager.dart';
+import '../app/di.dart';
+import '../services/location/types/location.dart';
+import 'manager/location_manager.dart';
 
 final class LocationsStorageState({
   required final Locations locations,
@@ -15,18 +15,23 @@ class LocationStorageNotifier extends AsyncNotifier<LocationsStorageState> {
   @override
   Future<LocationsStorageState> build() async {
     return LocationsStorageState(
-      locations: await ref.read(locationDatabaseProvider).fetchAll(),
-      activeLocation: await ref.read(locationDatabaseProvider).findActive(),
+      locations: await ref.read(locationDatabaseProvider).fetchAllLocation(),
+      activeLocation: await ref.read(locationDatabaseProvider).findActiveLocation(),
     );
   }
 
-  Future<int> add({required Location location, bool activate = true}) async {
-    await ref.read(locationDatabaseProvider).addLocation(location: location, activate: true);
+  Future<int> addate({required Location location}) async {
+    await ref.read(locationDatabaseProvider).addate(location: location);
+    return await _refresh();
+  }
+
+  Future<int> setLocationActive({required Location location}) async {
+    await ref.read(locationDatabaseProvider).setLocationActive(location: location);
     return await _refresh();
   }
 
   Future<int> remove({required Location location}) async {
-    await ref.read(locationDatabaseProvider).remove(location: location);
+    await ref.read(locationDatabaseProvider).deleteLocation(location: location);
     return await _refresh();
   }
 
@@ -35,8 +40,8 @@ class LocationStorageNotifier extends AsyncNotifier<LocationsStorageState> {
     state = await AsyncValue.guard(() async {
       final manager = ref.read(locationDatabaseProvider);
       return LocationsStorageState(
-        locations: await manager.fetchAll(),
-        activeLocation: await manager.findActive(),
+        locations: await manager.fetchAllLocation(),
+        activeLocation: await manager.findActiveLocation(),
       );
     });
     return state.value?.locations.length ?? 0;

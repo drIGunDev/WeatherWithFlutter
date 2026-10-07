@@ -4,9 +4,8 @@ import 'package:weather_with_flutter/presentation/screens/location_storage.dart'
 
 import '../presentation/screens/location_selecting.dart';
 import '../presentation/screens/weather_forecast.dart';
-import '../services/db/di.dart';
-import '../services/open_weather_service/di.dart';
 import '../services/open_weather_service/weather_service.dart';
+import 'di.dart';
 
 abstract interface class NavigationPaths {
   static const String root = '/';
@@ -16,12 +15,16 @@ abstract interface class NavigationPaths {
 
 abstract interface class AppParams {
   static const int updateIntervalSec = 60 * 60;
+  static const int forecastDays = 10;
+  static const int pastDays = 0;
 }
 
 Future<void> initializing(WidgetRef ref) async {
-  final activeLocation = await ref.read(locationDatabaseProvider).findActive();
+  final locationManager = ref.read(locationDatabaseProvider);
+  final activeLocation = await locationManager.findActiveLocation();
   if (activeLocation != null) {
-    await ref.read(meteoProvider.notifier).fetchForecast(params: MeteoFetchParameters(location: activeLocation));
+    final forecastProvider = ref.read(weatherForecastProvider.notifier);
+    await forecastProvider.fetchForecast(params: WeatherForecastFetchParameters(location: activeLocation));
   }
 }
 

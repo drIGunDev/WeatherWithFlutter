@@ -3,9 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather_with_flutter/presentation/screens/location_selecting.dart';
 import 'package:weather_with_flutter/presentation/widgets/location_row.dart';
 
+import '../../app/di.dart';
 import '../../app/main.dart';
-import '../../services/db/di.dart';
-import '../../services/open_weather_service/di.dart';
 import '../../services/open_weather_service/weather_service.dart';
 
 class LocationStorage extends ConsumerWidget {
@@ -35,19 +34,21 @@ class LocationStorage extends ConsumerWidget {
                         onTap: () async {
                           Navigator.pushReplacementNamed(context, NavigationPaths.root);
 
-                          ref.read(locationStorageProvider.notifier).add(location: location);
-                          await ref.read(meteoProvider.notifier).fetchForecast(params: MeteoFetchParameters(location: location));
+                          await ref.read(locationStorageProvider.notifier).setLocationActive(location: location);
+                          await ref.read(weatherForecastProvider.notifier).fetchForecast(params: WeatherForecastFetchParameters(location: location));
                         },
                         onDelete: () async {
                           await ref.read(locationStorageProvider.notifier).remove(location: location);
                           final results = await ref.read(locationStorageProvider.future);
                           if (results.locations.isEmpty) {
-                            await ref.read(meteoProvider.notifier).clear(location: location);
+                            await ref.read(weatherForecastProvider.notifier).clear(location: location);
                             return;
                           }
                           final activeLocation = results.activeLocation;
                           if (activeLocation != null) {
-                            await ref.read(meteoProvider.notifier).fetchForecast(params: MeteoFetchParameters(location: activeLocation));
+                            await ref
+                                .read(weatherForecastProvider.notifier)
+                                .fetchForecast(params: WeatherForecastFetchParameters(location: activeLocation));
                           }
                         },
                       );

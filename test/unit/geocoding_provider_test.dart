@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:weather_with_flutter/services/location/di.dart';
+import 'package:weather_with_flutter/app/di.dart';
 import 'package:weather_with_flutter/services/location/geocoding_service.dart';
 import 'package:weather_with_flutter/tools/logger/log.dart';
 

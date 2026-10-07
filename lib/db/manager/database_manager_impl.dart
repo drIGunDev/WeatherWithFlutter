@@ -2,15 +2,15 @@ import 'package:drift/drift.dart';
 import 'package:weather_with_flutter/services/location/types/location.dart';
 import 'package:weather_with_flutter/services/open_weather_service/weather_service.dart';
 
-import '../open_weather_service/types/event.dart';
-import '../open_weather_service/types/precipitation.dart';
-import '../open_weather_service/types/temperature.dart';
-import '../open_weather_service/types/weather_item.dart';
-import '../open_weather_service/types/weather_type.dart';
-import '../open_weather_service/types/wind.dart';
+import '../../services/open_weather_service/types/event.dart';
+import '../../services/open_weather_service/types/precipitation.dart';
+import '../../services/open_weather_service/types/temperature.dart';
+import '../../services/open_weather_service/types/weather_item.dart';
+import '../../services/open_weather_service/types/weather_type.dart';
+import '../../services/open_weather_service/types/wind.dart';
+import '../weather_db.dart';
 import 'forecast_manager.dart';
 import 'location_manager.dart';
-import 'weather_db.dart';
 
 extension _ToCompanion on Location {
   LocationTableCompanion toCompanion() {
@@ -103,38 +103,51 @@ final class DatabaseManagerImpl({
   required final WeatherDatabase _database,
 }) implements LocationManager, ForecastManager {
   @override
-  Future<void> addLocation({required Location location, bool activate = true}) async {
+  Future<void> addate({required Location location}) async {
     _database.transaction(() async {
       final existing = await _find(id: location.id);
       if (existing == null) {
         await _database.into(_database.locationTable).insert(location.toCompanion());
+      } else {
+        await _updateLocation(location: location);
       }
-      if (activate) {
-        await setActive(location: location);
+      if (location.isActive) {
+        await setLocationActive(location: location);
       }
     });
   }
 
+  Future<void> _updateLocation({required Location location}) async {
+    await (_database.update(
+      _database.locationTable,
+    )..where((tbl) => tbl.id.equals(location.id))).write(
+      location.toCompanion(),
+    );
+  }
+
   @override
-  Future<void> remove({required Location location}) async {
+  Future<void> deleteLocation({required Location location}) async {
     _database.transaction(() async {
-      final allLocations = await fetchAll();
+      final allLocations = await fetchAllLocation();
       if (allLocations.isEmpty) return;
 
-      final activeLocation = await findActive();
+      final activeLocation = await findActiveLocation();
       if (activeLocation == location) {
         final nextActiveLocation = await _findNextActiveTo(location);
         if (nextActiveLocation != null) {
-          await setActive(location: nextActiveLocation);
+          await setLocationActive(location: nextActiveLocation);
         }
       }
+      await deleteForecast(location: location);
       await (_database.delete(_database.locationTable)..where((tbl) => tbl.id.equals(location.id))).go();
     });
   }
 
   @override
-  Future<void> setActive({required Location location, bool activate = true}) {
+  Future<void> setLocationActive({required Location location}) {
     return _database.transaction(() async {
+      final realLocation = await _find(id: location.id);
+      if (realLocation == null) return;
       await _database
           .update(
             _database.locationTable,
@@ -147,14 +160,11 @@ final class DatabaseManagerImpl({
       )..where((tbl) => tbl.id.equals(location.id))).write(
         LocationTableCompanion(isActive: Value(true)),
       );
-      if (activate) {
-        await setActive(location: location, activate: false);
-      }
     });
   }
 
   @override
-  Future<Location?> findActive() async {
+  Future<Location?> findActiveLocation() async {
     final location = await (_database.select(
       _database.locationTable,
     )..where((tbl) => tbl.isActive.equals(true))).getSingleOrNull();
@@ -162,7 +172,7 @@ final class DatabaseManagerImpl({
   }
 
   @override
-  Future<Locations> fetchAll() {
+  Future<Locations> fetchAllLocation() {
     return _database.select(_database.locationTable).get().then((value) => value.map((e) => e.toLocation()).toList());
   }
 
@@ -174,7 +184,7 @@ final class DatabaseManagerImpl({
   }
 
   Future<Location?> _findNextActiveTo(Location activeLocation) async {
-    final allLocations = await fetchAll();
+    final allLocations = await fetchAllLocation();
     if (allLocations.isEmpty || allLocations.length == 1) return .empty;
 
     final index = allLocations.indexOf(activeLocation);
@@ -182,15 +192,9 @@ final class DatabaseManagerImpl({
   }
 
   @override
-  Future<void> updateForecast({required Location location, required MeteoForecast forecast}) async {
-    final savedLocation = await findLocationById(location.id);
-    if (savedLocation == null) {
-      await addLocation(location: location.copyWith(DateTime.now()), activate: false);
-    } else {
-      await _updateLocation(location.copyWith(DateTime.now()));
-    }
-
+  Future<void> updateForecast({required Location location, required ForecastList forecast}) async {
     await _database.transaction(() async {
+      await addate(location: location.copyWith(weatherUpdatedAt: DateTime.now()));
       await deleteForecast(location: location);
       await _database.batch((batch) {
         for (final e in forecast) {
@@ -204,7 +208,7 @@ final class DatabaseManagerImpl({
   }
 
   @override
-  Future<MeteoForecast> fetchForecast({required Location location}) async {
+  Future<ForecastList> fetchForecast({required Location location}) async {
     final list = await _fetchForecast(location);
     return list.map((e) => e.toEvent(location)).toList();
   }
@@ -222,7 +226,6 @@ final class DatabaseManagerImpl({
   @override
   Future<void> deleteForecast({required Location location}) {
     return _database.transaction(() async {
-      await _updateLocation(location.copyWith(null));
       (_database.delete(
         _database.weatherTable,
       )..where((tbl) => tbl.locationId.equals(location.id))).go();
@@ -245,15 +248,5 @@ final class DatabaseManagerImpl({
             (tbl) => OrderingTerm(expression: tbl.id, mode: OrderingMode.asc),
           ]))
         .get();
-  }
-
-  Future<void> _updateLocation(Location location) async {
-    await (_database.update(
-      _database.locationTable,
-    )..where((tbl) => tbl.id.equals(location.id))).write(
-      LocationTableCompanion(
-        weatherUpdatedAt: Value(DateTime.now()),
-      ),
-    );
   }
 }

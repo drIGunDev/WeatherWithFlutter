@@ -1,27 +1,26 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:weather_with_flutter/services/open_weather_service/di.dart';
 import 'package:weather_with_flutter/services/open_weather_service/weather_service.dart';
 
+import '../../app/di.dart';
 import '../../app/main.dart';
-import '../db/di.dart';
 import '../location/types/location.dart';
 
-final class const MeteoForecastState({
-  required final MeteoForecast forecast,
+final class const WeatherForecastState({
+  required final ForecastList forecast,
   required final Location? location,
 }) {
-  static const MeteoForecastState empty = MeteoForecastState(forecast: [], location: null);
+  static const WeatherForecastState empty = WeatherForecastState(forecast: [], location: null);
 }
 
-final class MeteoNotifier extends AsyncNotifier<MeteoForecastState> {
+final class ForecastNotifier extends AsyncNotifier<WeatherForecastState> {
   @override
-  FutureOr<MeteoForecastState> build() {
+  FutureOr<WeatherForecastState> build() {
     return Future.value(.empty);
   }
 
-  Future<void> fetchForecast({required MeteoFetchParameters params}) async {
+  Future<void> fetchForecast({required WeatherForecastFetchParameters params}) async {
     final forecastProvider = ref.read(forecastDatabaseProvider);
     final haveToUpdate = await forecastProvider.haveToUpdateForecast(locationId: params.location.id, updateIntervalSec: AppParams.updateIntervalSec);
 
@@ -34,8 +33,9 @@ final class MeteoNotifier extends AsyncNotifier<MeteoForecastState> {
       state = await AsyncValue.guard(() async {
         final provider = ref.read(meteoServiceProvider);
         final forecast = await provider.fetchForecast(params: params);
-        await forecastProvider.updateForecast(location: params.location, forecast: forecast);
-        return MeteoForecastState(forecast: forecast, location: params.location.copyWith(DateTime.now()));
+        final updatedLocation = params.location.copyWith(weatherUpdatedAt: DateTime.now(), isActive: true);
+        await forecastProvider.updateForecast(location: updatedLocation, forecast: forecast);
+        return WeatherForecastState(forecast: forecast, location: updatedLocation);
       });
     } else {
       state = AsyncValue.loading();
@@ -43,7 +43,7 @@ final class MeteoNotifier extends AsyncNotifier<MeteoForecastState> {
         final locationManager = ref.read(locationDatabaseProvider);
         final forecast = await forecastProvider.fetchForecast(location: params.location);
         final location = await locationManager.findLocationById(params.location.id);
-        return MeteoForecastState(forecast: forecast, location: location);
+        return WeatherForecastState(forecast: forecast, location: location);
       });
     }
   }
@@ -52,5 +52,7 @@ final class MeteoNotifier extends AsyncNotifier<MeteoForecastState> {
     state = AsyncValue.data(.empty);
     final forecastProvider = ref.read(forecastDatabaseProvider);
     await forecastProvider.deleteForecast(location: location);
+    final locationManager = ref.read(locationDatabaseProvider);
+    await locationManager.deleteLocation(location: location);
   }
 }

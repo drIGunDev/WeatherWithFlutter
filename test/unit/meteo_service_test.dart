@@ -10,7 +10,7 @@ void main() {
     final client = http.Client();
     final WeatherService service = OpenMeteoWeatherServiceImpl(client: client);
     final result = await service.fetchForecast(
-      params: MeteoFetchParameters(
+      params: WeatherForecastFetchParameters(
         location: Location(
           id: 'berlin',
           name: 'Berlin',

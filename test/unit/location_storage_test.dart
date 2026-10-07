@@ -1,8 +1,8 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:weather_with_flutter/services/db/weather_db.dart';
-import 'package:weather_with_flutter/services/db/location_manager.dart';
-import 'package:weather_with_flutter/services/db/database_manager_impl.dart';
+import 'package:weather_with_flutter/db/weather_db.dart';
+import 'package:weather_with_flutter/db/manager/location_manager.dart';
+import 'package:weather_with_flutter/db/manager/database_manager_impl.dart';
 import 'package:weather_with_flutter/services/location/types/location.dart';
 import 'package:weather_with_flutter/tools/logger/log.dart';
 
@@ -41,10 +41,10 @@ void main() {
   });
 
   test('test location storage', () async {
-    await manager.addLocation(location: berlin);
-    await manager.addLocation(location: london);
-    await manager.setActive(location: berlin);
-    var locations = await manager.fetchAll();
+    await manager.addate(location: berlin);
+    await manager.addate(location: london);
+    await manager.setLocationActive(location: berlin.copyWith(isActive: true));
+    var locations = await manager.fetchAllLocation();
     Log.d(locations);
     assert(locations.isNotEmpty);
     assert(locations.contains(berlin), true);
@@ -52,9 +52,9 @@ void main() {
     final activeLocation = locations.firstWhere((element) => element.isActive);
     assert(activeLocation.id == berlin.id);
     assert(activeLocation.id != london.id);
-    await manager.remove(location: berlin);
-    await manager.remove(location: london);
-    locations = await manager.fetchAll();
+    await manager.deleteLocation(location: berlin);
+    await manager.deleteLocation(location: london);
+    locations = await manager.fetchAllLocation();
     assert(locations.isEmpty);
   });
 }
