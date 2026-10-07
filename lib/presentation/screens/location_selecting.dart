@@ -6,6 +6,7 @@ import '../../app/main.dart';
 import '../../app/themes.dart';
 import '../../services/location/geocoding_service.dart';
 import '../../services/open_weather_service/weather_service.dart';
+import '../../tools/wrapped.dart';
 import '../widgets/location_row.dart';
 
 class LocationSelecting extends ConsumerStatefulWidget {
@@ -101,12 +102,10 @@ class _GeocodingState extends ConsumerState<LocationSelecting> {
                             onTap: () async {
                               Navigator.pushReplacementNamed(context, NavigationPaths.root);
 
-                              final selectedLocation = location.copyWith(weatherUpdatedAt: DateTime.now(), isActive: true);
+                              final selectedLocation = location.copyWith(weatherUpdatedAt: Wrapped.value(DateTime.now()), isActive: true);
                               ref.read(locationStorageProvider.notifier).addate(location: selectedLocation);
                               ref.read(geocodingProvider.notifier).reset();
-                              await ref
-                                  .read(weatherForecastProvider.notifier)
-                                  .fetchForecast(params: WeatherForecastFetchParameters(location: selectedLocation));
+                              await ref.read(weatherForecastProvider.notifier).fetchForecast(params: WeatherForecastFetchParameters(location: selectedLocation));
                             },
                           ),
                         ],

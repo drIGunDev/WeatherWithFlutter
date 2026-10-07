@@ -8,6 +8,7 @@ import '../../services/open_weather_service/types/temperature.dart';
 import '../../services/open_weather_service/types/weather_item.dart';
 import '../../services/open_weather_service/types/weather_type.dart';
 import '../../services/open_weather_service/types/wind.dart';
+import '../../tools/wrapped.dart';
 import '../weather_db.dart';
 import 'forecast_manager.dart';
 import 'location_manager.dart';
@@ -194,7 +195,7 @@ final class DatabaseManagerImpl({
   @override
   Future<void> updateForecast({required Location location, required ForecastList forecast}) async {
     await _database.transaction(() async {
-      await addate(location: location.copyWith(weatherUpdatedAt: DateTime.now()));
+      await addate(location: location.copyWith(weatherUpdatedAt: Wrapped.value(DateTime.now())));
       await deleteForecast(location: location);
       await _database.batch((batch) {
         for (final e in forecast) {

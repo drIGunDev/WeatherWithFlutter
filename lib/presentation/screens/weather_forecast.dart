@@ -4,7 +4,7 @@ import 'package:weather_with_flutter/presentation/screens/location_storage.dart'
 
 import '../../app/di.dart';
 import '../../app/main.dart';
-import '../../db/last_update_counter.dart';
+import '../../db/state/last_update_counter.dart';
 import '../../tools/logger/log.dart';
 import '../widgets/location_row.dart';
 

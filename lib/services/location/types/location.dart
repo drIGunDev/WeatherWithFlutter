@@ -1,3 +1,4 @@
+import '../../../tools/wrapped.dart';
 import '../../open_weather_service/types/id_generator.dart';
 
 typedef LocationId = String;
@@ -56,8 +57,8 @@ final class Location {
   }
 
   Location copyWith({
-    DateTime? weatherUpdatedAt,
-    bool isActive = false,
+    Wrapped<DateTime?>? weatherUpdatedAt,
+    bool? isActive,
   }) {
     return Location(
       id: id,
@@ -68,8 +69,8 @@ final class Location {
       countryCode: countryCode,
       city: city,
       timezone: timezone,
-      isActive: isActive,
-      weatherUpdatedAt: weatherUpdatedAt ?? this.weatherUpdatedAt,
+      isActive: isActive ?? this.isActive,
+      weatherUpdatedAt: weatherUpdatedAt?.value ?? this.weatherUpdatedAt,
     );
   }
 

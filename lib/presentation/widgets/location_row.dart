@@ -19,9 +19,7 @@ class const LocationRow({
         builder: (context, ref, _) {
           return InkWell(
             onTap: () {
-              if (_onTap != null) {
-                _onTap();
-              }
+              _onTap?.call();
             },
             borderRadius: BorderRadius.circular(AppSpacing.medium),
             child: Container(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather_with_flutter/presentation/screens/location_storage.dart';
@@ -32,7 +34,7 @@ void main() => runApp(
   ProviderScope(
     child: Consumer(
       builder: (context, ref, _) {
-        initializing(ref);
+        unawaited(initializing(ref));
         return MaterialApp(
           initialRoute: NavigationPaths.root,
           routes: {

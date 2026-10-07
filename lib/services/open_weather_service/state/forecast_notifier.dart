@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather_with_flutter/services/open_weather_service/weather_service.dart';
 
-import '../../app/di.dart';
-import '../../app/main.dart';
-import '../location/types/location.dart';
+import '../../../app/di.dart';
+import '../../../app/main.dart';
+import '../../../tools/wrapped.dart';
+import '../../location/types/location.dart';
 
 final class const WeatherForecastState({
   required final ForecastList forecast,
@@ -33,7 +34,7 @@ final class ForecastNotifier extends AsyncNotifier<WeatherForecastState> {
       state = await AsyncValue.guard(() async {
         final provider = ref.read(meteoServiceProvider);
         final forecast = await provider.fetchForecast(params: params);
-        final updatedLocation = params.location.copyWith(weatherUpdatedAt: DateTime.now(), isActive: true);
+        final updatedLocation = params.location.copyWith(weatherUpdatedAt: Wrapped.value(DateTime.now()), isActive: true);
         await forecastProvider.updateForecast(location: updatedLocation, forecast: forecast);
         return WeatherForecastState(forecast: forecast, location: updatedLocation);
       });

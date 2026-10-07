@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../services/location/types/location.dart';
+import '../../services/location/types/location.dart';
 
 final forecastLastUpdateCounter = StreamProvider.family<int, Location>((ref, location) {
   return Stream.periodic(const Duration(seconds: 1), (count) {
