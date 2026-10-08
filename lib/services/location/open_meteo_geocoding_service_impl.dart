@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../open_weather_service/types/id_generator.dart';
+import '../../tools/id_generator.dart';
 import 'geocoding_service.dart';
 import 'types/location.dart';
 

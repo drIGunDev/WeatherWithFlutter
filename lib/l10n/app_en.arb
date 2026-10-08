@@ -1,0 +1,41 @@
+{
+  "@@locale": "en",
+  "aboutTitle": "About",
+  "aboutVersion": "Version {version}",
+  "@aboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+
+  "weatherClearSky": "Clear sky",
+  "weatherMainlyClear": "Mainly clear",
+  "weatherPartlyCloudy": "Partly cloudy",
+  "weatherOvercast": "Overcast",
+  "weatherFog": "Fog",
+  "weatherRimeFog": "Rime fog",
+  "weatherLightDrizzle": "Light drizzle",
+  "weatherDrizzle": "Drizzle",
+  "weatherDenseDrizzle": "Dense drizzle",
+  "weatherLightFreezingDrizzle": "Light freezing drizzle",
+  "weatherFreezingDrizzle": "Freezing drizzle",
+  "weatherLightRain": "Light rain",
+  "weatherRain": "Rain",
+  "weatherHeavyRain": "Heavy rain",
+  "weatherLightFreezingRain": "Light freezing rain",
+  "weatherFreezingRain": "Freezing rain",
+  "weatherLightSnow": "Light snow",
+  "weatherSnow": "Snow",
+  "weatherHeavySnow": "Heavy snow",
+  "weatherSnowGrains": "Snow grains",
+  "weatherLightRainShowers": "Light rain showers",
+  "weatherRainShowers": "Rain showers",
+  "weatherHeavyRainShowers": "Heavy rain showers",
+  "weatherLightSnowShowers": "Light snow showers",
+  "weatherSnowShowers": "Snow showers",
+  "weatherThunderstorm": "Thunderstorm",
+  "weatherStrongThunderstorm": "Strong thunderstorm",
+  "weatherHeavyThunderstorm": "Heavy thunderstorm"
+}

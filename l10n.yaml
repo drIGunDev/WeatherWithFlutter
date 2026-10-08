@@ -1,0 +1,12 @@
+# gen-l10n: the app's interface strings. English is the template and the
+# fallback; German and Russian follow the system language (there is no in-app
+# switch — iOS does not allow one, and Android 13+ has it in system settings).
+# The vocabulary the server also speaks (activity and condition names, push
+# copy) is not here: see gosignal_shared's AppLanguage and *Labels.
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+output-dir: lib/l10n
+#synthetic-package: false
+nullable-getter: false

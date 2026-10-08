@@ -1,4 +1,5 @@
 import '../../services/location/types/location.dart';
+import '../../services/open_weather_service/types/forecast_types.dart';
 import '../../services/open_weather_service/weather_service.dart';
 
 abstract interface class ForecastManager {

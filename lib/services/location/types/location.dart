@@ -1,5 +1,5 @@
 import '../../../tools/wrapped.dart';
-import '../../open_weather_service/types/id_generator.dart';
+import '../../../tools/id_generator.dart';
 
 typedef LocationId = String;
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather_with_flutter/presentation/screens/location_storage.dart';
 
+import '../l10n/app_localizations.dart';
 import '../presentation/screens/location_selecting.dart';
 import '../presentation/screens/weather_forecast.dart';
 import '../services/open_weather_service/weather_service.dart';
@@ -36,6 +37,8 @@ void main() => runApp(
       builder: (context, ref, _) {
         unawaited(initializing(ref));
         return MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           initialRoute: NavigationPaths.root,
           routes: {
             NavigationPaths.root: (context) => WeatherForecast(),

@@ -1,9 +1,6 @@
 import '../../app/main.dart';
 import '../location/types/location.dart';
-import 'types/event.dart';
-import 'types/weather_item.dart';
-
-typedef ForecastList = List<Event<WeatherItem>>;
+import 'types/forecast_types.dart';
 
 final class WeatherForecastFetchParameters({
   required final Location location,

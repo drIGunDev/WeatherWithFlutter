@@ -3,6 +3,7 @@ import 'package:weather_with_flutter/services/location/types/location.dart';
 import 'package:weather_with_flutter/services/open_weather_service/weather_service.dart';
 
 import '../../services/open_weather_service/types/event.dart';
+import '../../services/open_weather_service/types/forecast_types.dart';
 import '../../services/open_weather_service/types/precipitation.dart';
 import '../../services/open_weather_service/types/temperature.dart';
 import '../../services/open_weather_service/types/weather_item.dart';

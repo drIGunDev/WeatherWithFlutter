@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import '../../tools/logger/log.dart';
 import 'types/event.dart';
+import 'types/forecast_types.dart';
 import 'types/precipitation.dart';
 import 'types/temperature.dart';
 import 'types/weather_item.dart';

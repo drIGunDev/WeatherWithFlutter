@@ -7,6 +7,8 @@ import '../../app/main.dart';
 import '../../db/state/last_update_counter.dart';
 import '../../tools/logger/log.dart';
 import '../widgets/location_row.dart';
+import '../widgets/row_day.dart';
+import '../widgets/today_summary.dart';
 
 class WeatherForecast extends ConsumerWidget {
   const WeatherForecast({super.key});
@@ -32,37 +34,35 @@ class WeatherForecast extends ConsumerWidget {
         child: Center(
           child: Column(
             children: [
-              LocationRow(
-                location: weather.value!.location,
-                onTap: () {
-                  Navigator.pushNamed(context, NavigationPaths.selectLocation);
-                },
-              ),
-              const Divider(),
-              Text('active location ${weather.value?.location?.weatherUpdatedAt?.toString() ?? 'no active location'}'),
-              LastUpdateCounter(
-                location: weather.value!.location,
-                builder: (counter) => counter.when(
-                  data: (data) {
-                    final date = DateTime(2026, 1, 1, 0, 0, data);
-                    final hour = date.hour;
-                    final minute = date.minute;
-                    final second = date.second;
-                    return Text('last update for: $hour:$minute:$second');
-                  },
-                  loading: () => Text('Loading...'),
-                  error: (err, stack) => Text(''),
-                ),
-              ),
               Expanded(
                 child: weather.when(
                   data: (data) {
-                    Log.d('data length: ${data.forecast.length} ${(data.forecast.isNotEmpty) ? data.forecast.first : ''}');
-                    return ListView.builder(
-                      itemBuilder: (context, i) {
-                        return Center(child: Text('${data.forecast[i].start} ${data.forecast[i].item.type.name}'));
-                      },
-                      itemCount: data.forecast.length,
+                     return Column(
+                      children: [
+                        TodaySummary(forecast: data.forecast, location: weather.value!.location,),
+
+                        const SizedBox(height: 5),
+
+                        LastUpdateCounter(
+                          location: weather.value!.location,
+                          builder: (counter) => counter.when(
+                            data: (data) =>_lastUpdateText(data),
+                            loading: () => Text('loading ...'),
+                            error: (err, stack) => Text('Error: $err'),
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        Expanded(
+                          child: ListView.builder(
+                            itemBuilder: (context, i) {
+                              return RowDay(day: data.forecast[i]);
+                            },
+                            itemCount: data.forecast.length,
+                          ),
+                        ),
+                      ],
                     );
                   },
                   loading: () => Column(
@@ -80,15 +80,14 @@ class WeatherForecast extends ConsumerWidget {
       ),
     );
   }
-}
 
-class Day extends StatelessWidget {
-  final Widget _child;
-
-  const Day({super.key, required this._child});
-
-  @override
-  Widget build(BuildContext context) {
-    return _child;
+  Widget _lastUpdateText(int lastUpdate) {
+    final date = DateTime(2026, 1, 1, 0, 0, lastUpdate);
+    final hour = date.hour;
+    if (hour != 0) return Text('last update: $hour hours ago', style: TextStyle(fontSize: 10));
+    final minute = date.minute;
+    if (minute != 0) return Text('last update: $minute minutes ago', style: TextStyle(fontSize: 10));
+    final second = date.second;
+    return Text('last update for: $second seconds ago', style: TextStyle(fontSize: 10));
   }
 }
