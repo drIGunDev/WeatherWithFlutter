@@ -7,32 +7,23 @@ abstract interface class GeoLocatable {
   Location get location;
 }
 
-final class Location {
-  static const Location? empty = null;
-
+final class Location({
+  LocationId? id,
+  required final double latitude,
+  required final double longitude,
+  required final String name,
+  required final String country,
+  required final String countryCode,
+  required final String city,
+  required final String timezone,
+  final bool isActive = false,
+  final DateTime? weatherUpdatedAt,
+}) {
   final LocationId id;
-  final double latitude;
-  final double longitude;
-  final String name;
-  final String country;
-  final String countryCode;
-  final String city;
-  final String timezone;
-  final bool isActive;
-  final DateTime? weatherUpdatedAt;
 
-  Location({
-    LocationId? id,
-    required this.latitude,
-    required this.longitude,
-    required this.name,
-    required this.country,
-    required this.countryCode,
-    required this.city,
-    required this.timezone,
-    this.isActive = false,
-    this.weatherUpdatedAt,
-  }) : id = id ?? const UuidIdGenerator().generate();
+  this : id = id ?? const UuidIdGenerator().generate();
+
+  static const Location? empty = null;
 
   factory Location.short({
     required double latitude,
@@ -76,7 +67,18 @@ final class Location {
 
   @override
   String toString() {
-    return 'Location{id: $id, latitude: $latitude, longitude: $longitude, name: $name, country: $country, countryCode: $countryCode, city: $city, timezone: $timezone, isActive: $isActive, weatherUpdatedAt: $weatherUpdatedAt}';
+    final buffer = StringBuffer()
+      ..write('Location(id: $id, ')
+      ..write('latitude: $latitude, ')
+      ..write('longitude: $longitude, ')
+      ..write('name: $name, ')
+      ..write('country: $country, ')
+      ..write('countryCode: $countryCode, ')
+      ..write('city: $city, ')
+      ..write('timezone: $timezone, ')
+      ..write('isActive: $isActive, ')
+      ..write('weatherUpdatedAt: $weatherUpdatedAt)');
+    return buffer.toString();
   }
 
   @override

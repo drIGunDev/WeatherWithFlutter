@@ -14,7 +14,14 @@ final class const WeatherItem({
 }) implements GeoLocatable {
   @override
   String toString() {
-    return 'WeatherItem{type: $type, temperature: $temperature, apparentTemperature: $apparentTemperature, precipitation: $precipitation, wind: $wind location: $location}';
+    final buff = StringBuffer()
+      ..write('WeatherItem(type: $type, ')
+      ..write('temperature: $temperature, ')
+      ..write('apparentTemperature: $apparentTemperature, ')
+      ..write('precipitation: $precipitation, ')
+      ..write('wind: $wind, ')
+      ..write('location: $location)');
+    return buff.toString();
   }
 
   @override

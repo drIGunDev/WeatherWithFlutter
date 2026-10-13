@@ -1,17 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 
 import '../db/manager/database_manager_impl.dart';
 import '../db/manager/forecast_manager.dart';
 import '../db/manager/location_manager.dart';
-import '../db/state/location_storage_notifier.dart';
+import '../services/location/state/location_storage_notifier.dart';
 import '../db/weather_db.dart';
-import '../services/http/di.dart';
 import '../services/location/geocoding_service.dart';
 import '../services/location/open_meteo_geocoding_service_impl.dart';
 import '../services/location/state/geocoding_notifier.dart';
 import '../services/open_weather_service/open_meteo_weather_service_impl.dart';
 import '../services/open_weather_service/state/forecast_notifier.dart';
 import '../services/open_weather_service/weather_service.dart';
+
+///
+/// Http client
+/// 
+final httpClientProvider = Provider<http.Client>((ref) => http.Client());
 
 ///
 /// Geocoding service

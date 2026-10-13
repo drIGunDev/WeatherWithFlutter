@@ -6,10 +6,8 @@ import '../../tools/id_generator.dart';
 import 'geocoding_service.dart';
 import 'types/location.dart';
 
-final class OpenMeteoGeocodingServiceImpl implements GeocodingService {
+final class OpenMeteoGeocodingServiceImpl({required this._client}) implements GeocodingService {
   final http.Client _client;
-
-  OpenMeteoGeocodingServiceImpl({required this._client});
 
   @override
   Future<GeocodingResult> fetchLocations({required GeocodingFetchParameters params}) async {

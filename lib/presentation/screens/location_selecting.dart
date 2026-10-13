@@ -9,9 +9,7 @@ import '../../services/open_weather_service/weather_service.dart';
 import '../../tools/wrapped.dart';
 import '../widgets/location_row.dart';
 
-class LocationSelecting extends ConsumerStatefulWidget {
-  const LocationSelecting({super.key});
-
+class const LocationSelecting({super.key}) extends ConsumerStatefulWidget {
   @override
   ConsumerState<LocationSelecting> createState() => _GeocodingState();
 }

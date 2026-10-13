@@ -7,9 +7,7 @@ import '../../app/di.dart';
 import '../../app/main.dart';
 import '../../services/open_weather_service/weather_service.dart';
 
-class LocationStorage extends ConsumerWidget {
-  const LocationStorage({super.key});
-
+class const LocationStorage({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locations = ref.watch(locationStorageProvider);

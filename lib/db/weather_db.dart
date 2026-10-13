@@ -60,10 +60,10 @@ class WeatherTable extends Table {
 }
 
 @DriftDatabase(tables: [LocationTable, WeatherTable])
-final class WeatherDatabase extends _$WeatherDatabase {
+final class WeatherDatabase([NativeDatabase? connection]) extends _$WeatherDatabase {
   static const String databaseName = 'weather.sqlite';
 
-  WeatherDatabase([NativeDatabase? connection]) : super(connection ?? _openConnection());
+  this : super(connection ?? _openConnection());
 
   @override
   int get schemaVersion => 1;

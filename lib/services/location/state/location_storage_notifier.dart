@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/di.dart';
-import '../../services/location/types/location.dart';
-import '../manager/location_manager.dart';
+import '../../../app/di.dart';
+import '../types/location.dart';
+import '../../../db/manager/location_manager.dart';
 
 final class LocationsStorageState({
   required final Locations locations,
