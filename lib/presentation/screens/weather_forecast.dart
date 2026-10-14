@@ -3,12 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather_with_flutter/presentation/screens/location_storage.dart';
 
 import '../../app/di.dart';
-import '../../app/main.dart';
 import '../../services/location/state/last_update_counter.dart';
-import '../../tools/logger/log.dart';
-import '../widgets/location_row.dart';
-import '../widgets/day_row.dart';
-import '../widgets/today_summary.dart';
+import '../widgets/day_compose.dart';
+import '../widgets/weather_now.dart';
 
 class WeatherForecast extends ConsumerWidget {
   const WeatherForecast({super.key});
@@ -31,51 +28,41 @@ class WeatherForecast extends ConsumerWidget {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
-            child: weather.when(
-              data: (data) {
-                return Column(
-                  children: [
-                    TodaySummary(
-                      forecast: data.forecast,
-                      location: weather.value!.location,
-                    ),
-            
-                    const SizedBox(height: 5),
-            
-                    LastUpdateCounter(
-                      location: weather.value!.location,
-                      builder: (counter) => counter.when(
-                        data: (data) => _lastUpdateText(data),
-                        loading: () => Text('loading ...'),
-                        error: (err, stack) => Text('Error: $err'),
+        child: Center(
+          child: weather.when(
+            data: (data) {
+              return ListView(
+                children: [
+                  WeatherNow(
+                    forecast: data.forecast,
+                    location: weather.value!.location,
+                  ),
+                  const SizedBox(height: 5),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 15),
+                      child: LastUpdateCounter(
+                        location: weather.value!.location,
+                        builder: (counter) => counter.when(
+                          data: (data) => _lastUpdateText(data),
+                          loading: () => Text('loading ...', style: TextStyle(fontSize: 10)),
+                          error: (err, stack) => Text('Error: $err', style: TextStyle(fontSize: 10)),
+                        ),
                       ),
                     ),
-            
-                    const SizedBox(height: 10),
-            
-                    // Expanded(
-                    //   child:
-                    //   ListView.builder(
-                    //     itemBuilder: (context, i) {
-                    //       return RowDay(day: data.forecast[i]);
-                    //     },
-                    //     itemCount: data.forecast.length,
-                    //   ),
-                    // ),
-                    for (var i = 0; i < data.forecast.length; i++) ...[DayRow(day: data.forecast[i])],
-                  ],
-                );
-              },
-              loading: () => Column(
-                children: [
-                  Text('loading ...', style: TextStyle(fontSize: 13)),
-                  // Spacer(),
+                  ),
+                  const SizedBox(height: 10),
+                  for (var i = 0; i < data.forecast.length; i++) ...[DayCompose(day: data.forecast[i])],
                 ],
-              ),
-              error: (err, stack) => Text('Error: $err'),
+              );
+            },
+            loading: () => Column(
+              children: [
+                Text('loading ...', style: TextStyle(fontSize: 13)),
+              ],
             ),
+            error: (err, stack) => Text('Error: $err'),
           ),
         ),
       ),

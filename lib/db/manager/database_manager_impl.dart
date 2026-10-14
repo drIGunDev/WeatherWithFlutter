@@ -1,6 +1,5 @@
 import 'package:drift/drift.dart';
 import 'package:weather_with_flutter/services/location/types/location.dart';
-import 'package:weather_with_flutter/services/open_weather_service/weather_service.dart';
 
 import '../../services/open_weather_service/types/event.dart';
 import '../../services/open_weather_service/types/forecast_types.dart';

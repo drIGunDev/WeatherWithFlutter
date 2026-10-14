@@ -1,4 +1,5 @@
 import 'event.dart';
+import 'temperature.dart';
 import 'weather_item.dart';
 
 typedef ForecastList = List<Event<WeatherItem>>;
@@ -8,6 +9,16 @@ final class DayForecast({
 });
 
 typedef DaysForecast = List<DayForecast>;
+
+extension Infarior on DayForecast {
+  WeatherItem inferior() => hoursForecast.reduce((value, element) => value.item.type.type > element.item.type.type ? value : element).item;
+
+  Temperature minTemperature() =>
+      hoursForecast.reduce((value, element) => value.item.temperature.celsius < element.item.temperature.celsius ? value : element).item.temperature;
+
+  Temperature maxTemperature() =>
+      hoursForecast.reduce((value, element) => value.item.temperature.celsius > element.item.temperature.celsius ? value : element).item.temperature;
+}
 
 extension ToDaysForecast on ForecastList {
   DaysForecast toDaysForecast() {

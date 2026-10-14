@@ -7,8 +7,9 @@ import '../../services/location/types/location.dart';
 import '../../services/open_weather_service/types/event.dart';
 import '../../services/open_weather_service/types/weather_item.dart';
 import '../formatters/weathers_labels.dart';
+import 'weather_emoji.dart';
 
-class const TodaySummary({
+class const WeatherNow({
   super.key,
   required final DaysForecast _forecast,
   required final Location? _location,
@@ -17,8 +18,8 @@ class const TodaySummary({
   Widget build(BuildContext context) {
     final todayForecast = _forecast.first;
     final currentWeather = _getCurrentWeather(todayForecast);
-    final weatherEmoji = currentWeather != null ? _getWeatherEmoji(currentWeather) : null;
-    final (min, max) = _getMinMaxTemperature(todayForecast);
+    final min = todayForecast.minTemperature().temperature;
+    final max = todayForecast.maxTemperature().temperature;
     final weatherType = currentWeather != null ? WeatherLabels.name(context.l10n, currentWeather.item.type) : null;
     final temperature = currentWeather != null ? currentWeather.item.temperature.temperature.toString() : '';
     return Column(
@@ -31,11 +32,8 @@ class const TodaySummary({
           ),
         ],
         const SizedBox(height: 10),
-        if (weatherEmoji != null) ...[
-          Text(
-            weatherEmoji,
-            style: TextStyle(fontSize: 70, fontWeight: FontWeight.bold),
-          ),
+        if (currentWeather != null) ...[
+          WeatherEmoji(type: currentWeather.item.type, date: currentWeather.start, size: 100),
         ],
         const SizedBox(height: 10),
         if (currentWeather != null) ...[
@@ -85,23 +83,5 @@ class const TodaySummary({
       }
     }
     return item;
-  }
-
-  String _getWeatherEmoji(Event<WeatherItem> item) {
-    final weatherType = item.item.type;
-    final date = item.start;
-    return WeatherLabels.emojiForHour(weatherType, date.hour);
-  }
-
-  (double, double) _getMinMaxTemperature(DayForecast day) {
-    final min = day.hoursForecast.fold(
-      double.maxFinite,
-      (prev, element) => element.item.temperature.temperature < prev ? element.item.temperature.temperature : prev,
-    );
-    final max = day.hoursForecast.fold(
-      double.minPositive,
-      (prev, element) => element.item.temperature.temperature > prev ? element.item.temperature.temperature : prev,
-    );
-    return (min, max);
   }
 }

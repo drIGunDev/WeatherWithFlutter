@@ -11,6 +11,5 @@ extension AppLocalizationsContext on BuildContext {
   // /// classes (activity and condition names) understand. Always one of the
   // /// supported ones: the locale resolves to English when the device's language
   // /// is not.
-  AppLanguage get language =>
-      AppLanguage.fromCode(Localizations.localeOf(this).languageCode);
+  AppLanguage get language => AppLanguage.fromCode(Localizations.localeOf(this).languageCode);
 }

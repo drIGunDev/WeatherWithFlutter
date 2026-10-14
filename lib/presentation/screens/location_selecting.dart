@@ -103,7 +103,9 @@ class _GeocodingState extends ConsumerState<LocationSelecting> {
                               final selectedLocation = location.copyWith(weatherUpdatedAt: Wrapped.value(DateTime.now()), isActive: true);
                               ref.read(locationStorageProvider.notifier).addate(location: selectedLocation);
                               ref.read(geocodingProvider.notifier).reset();
-                              await ref.read(weatherForecastProvider.notifier).fetchForecast(params: WeatherForecastFetchParameters(location: selectedLocation));
+                              await ref
+                                  .read(weatherForecastProvider.notifier)
+                                  .fetchForecast(params: WeatherForecastFetchParameters(location: selectedLocation));
                             },
                           ),
                         ],

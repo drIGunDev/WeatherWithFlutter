@@ -6,6 +6,7 @@ abstract final class WeatherLabels {
 
   /// Hours at or after this are night again.
   static const int _nightStartsHour = 18;
+
   /// [emoji] for a given hour: at night nothing shows the sun — a clear sky
   /// becomes the moon, a sun behind cloud or rain just the cloud or rain.
   static String emojiForHour(WeatherType type, int hour) {
