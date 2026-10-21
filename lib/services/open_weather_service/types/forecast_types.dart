@@ -18,6 +18,18 @@ extension Infarior on DayForecast {
 
   Temperature maxTemperature() =>
       hoursForecast.reduce((value, element) => value.item.temperature.celsius > element.item.temperature.celsius ? value : element).item.temperature;
+
+  double minWind() => hoursForecast
+      .reduce((value, element) => value.item.wind.forceKmPerHour < element.item.wind.forceKmPerHour ? value : element)
+      .item
+      .wind
+      .forceKmPerHour;
+
+  double maxWind() => hoursForecast
+      .reduce((value, element) => value.item.wind.forceKmPerHour > element.item.wind.forceKmPerHour ? value : element)
+      .item
+      .wind
+      .forceKmPerHour;
 }
 
 extension ToDaysForecast on ForecastList {

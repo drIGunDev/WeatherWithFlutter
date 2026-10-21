@@ -18,20 +18,25 @@ class _DayComposeState extends State<DayCompose> {
   @override
   Widget build(BuildContext context) {
     final headerTextStyle = TextStyle(fontSize: 14, fontWeight: .bold, color: Colors.white);
-    return Material(
-      child: Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Center(
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Center(
+        child: Container(
+          color: Colors.blueGrey,
           child: Column(
             children: [
-              InkWell(
-                // hoverColor: Colors.transparent,
-                highlightColor: Colors.blue,
-                splashColor: Colors.blue,
-                // overlayColor: Colors.lightBlueAccent,
-                borderRadius: BorderRadius.circular(5),
-                onTap: () => setState(() => _isExpanded = !_isExpanded),
-                child: DaySummary(day: widget.day),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  excludeFromSemantics: true,
+                  // hoverColor: Colors.transparent,
+                  highlightColor: Colors.blue,
+                  splashColor: Colors.blue,
+                  // overlayColor: Colors.lightBlueAccent,
+                  borderRadius: BorderRadius.circular(5),
+                  onTap: () => setState(() => _isExpanded = !_isExpanded),
+                  child: DaySummary(day: widget.day),
+                ),
               ),
               if (_isExpanded) ...[
                 Padding(

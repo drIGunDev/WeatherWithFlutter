@@ -41,27 +41,37 @@ class const _DayRow({
     final weatherType = WeatherLabels.name(context.l10n, inferior.type);
     final minTemperature = day.minTemperature();
     final maxTemperature = day.maxTemperature();
-    final textStyle = TextStyle(fontSize: 14, fontWeight: .bold);
+    final minWind = day.minWind();
+    final maxWind = day.maxWind();
+    final textStyle = TextStyle(fontSize: 14, fontWeight: .bold, color: Colors.white);
     return Row(
       children: [
-        Container(
-          height: 80,
-          alignment: .topLeft,
-          child: Text(DateTimeFormat.dayShort(context.l10n, date), style: TextStyle(fontSize: 14, fontWeight: .bold)),
+        Column(
+          children: [
+            Text(DateTimeFormat.dayShort(context.l10n, date), style: TextStyle(fontSize: 14, fontWeight: .bold)),
+            WeatherEmoji(type: inferior.type, date: date, size: 40),
+            Text('${inferior.precipitation.amountMm} %', style: textStyle),
+            Text(weatherType, style: textStyle),
+          ],
         ),
+        const SizedBox(width: 20),
         Expanded(
-          child: Column(
-            children: [
-              WeatherEmoji(type: inferior.type, date: date, size: 40),
-              Text('${inferior.precipitation.amountMm} %', style: textStyle),
-              Text(weatherType, style: textStyle),
-            ],
-          ),
-        ),
-        Expanded(
-          child: Text(
-            'min: ${minTemperature.temperature}° max: ${maxTemperature.temperature}°',
-            style: textStyle,
+          child: SizedBox(
+            height: 120,
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                Text(
+                  '🌡️ min: ${minTemperature.temperature}°, max: ${maxTemperature.temperature}°',
+                  style: textStyle,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  '༄ min: ${minWind.toStringAsFixed(1)} km/h, max: ${maxWind.toStringAsFixed(1)} km/h',
+                  style: textStyle,
+                ),
+              ],
+            ),
           ),
         ),
       ],

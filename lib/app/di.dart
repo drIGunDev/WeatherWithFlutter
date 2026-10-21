@@ -29,6 +29,16 @@ final geocodingServiceProvider = Provider<GeocodingService>((ref) {
 final geocodingProvider = AsyncNotifierProvider<GeocodingNotifier, GeocodingState>(GeocodingNotifier.new);
 
 ///
+/// Weather service
+///
+final meteoServiceProvider = Provider<WeatherService>((ref) {
+  final meteoService = OpenMeteoWeatherServiceImpl(client: ref.read(httpClientProvider));
+  return meteoService;
+});
+
+final weatherForecastProvider = AsyncNotifierProvider<ForecastNotifier, WeatherForecastState>(ForecastNotifier.new);
+
+///
 /// Database
 ///
 final weatherDatabaseProvider = Provider<WeatherDatabase>((ref) {
@@ -44,13 +54,3 @@ final locationStorageProvider = AsyncNotifierProvider<LocationStorageNotifier, L
 final forecastDatabaseProvider = Provider<ForecastManager>((ref) {
   return DatabaseManagerImpl(database: ref.read(weatherDatabaseProvider));
 });
-
-///
-/// Weather service
-///
-final meteoServiceProvider = Provider<WeatherService>((ref) {
-  final meteoService = OpenMeteoWeatherServiceImpl(client: ref.read(httpClientProvider));
-  return meteoService;
-});
-
-final weatherForecastProvider = AsyncNotifierProvider<ForecastNotifier, WeatherForecastState>(ForecastNotifier.new);

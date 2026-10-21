@@ -22,52 +22,50 @@ class const WeatherNow({
     final max = todayForecast.maxTemperature().temperature;
     final weatherType = currentWeather != null ? WeatherLabels.name(context.l10n, currentWeather.item.type) : null;
     final temperature = currentWeather != null ? currentWeather.item.temperature.temperature.toString() : '';
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        if (_location != null) ...[
-          Text(
-            _location.name,
-            style: TextStyle(fontSize: AppFontSizes.extraLarge, fontWeight: FontWeight.bold),
-          ),
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          if (_location != null)
+            Text(
+              _location.name,
+              style: TextStyle(fontSize: AppFontSizes.extraLarge, fontWeight: FontWeight.bold),
+            ),
+          const SizedBox(height: 10),
+          if (currentWeather != null) WeatherEmoji(type: currentWeather.item.type, date: currentWeather.start, size: 100),
+          const SizedBox(height: 10),
+          if (currentWeather != null)
+            Text(
+              weatherType ?? currentWeather.item.type.name,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          const SizedBox(height: 10),
+          if (currentWeather != null)
+            Row(
+              mainAxisAlignment: .center,
+              children: [
+                Text(
+                  '$temperature°',
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  children: [
+                    Text(
+                      'min: $min°',
+                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'max: $max°',
+                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ],
+            ),
         ],
-        const SizedBox(height: 10),
-        if (currentWeather != null) ...[
-          WeatherEmoji(type: currentWeather.item.type, date: currentWeather.start, size: 100),
-        ],
-        const SizedBox(height: 10),
-        if (currentWeather != null) ...[
-          Text(
-            weatherType ?? currentWeather.item.type.name,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ],
-        const SizedBox(height: 10),
-        if (currentWeather != null) ...[
-          Row(
-            mainAxisAlignment: .center,
-            children: [
-              Text(
-                '$temperature°',
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(width: 10),
-              Column(
-                children: [
-                  Text(
-                    'min: $min°',
-                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'max: $max°',
-                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ],
+      ),
     );
   }
 
