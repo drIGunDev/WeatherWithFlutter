@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:weather_with_flutter/presentation/screens/location_selecting.dart';
+import 'package:weather_with_flutter/presentation/screens/location_selection.dart';
 import 'package:weather_with_flutter/presentation/widgets/location_row.dart';
 
-import '../../app/di.dart';
 import '../../app/main.dart';
+import '../../services/location/state/location_storage_notifier.dart';
+import '../../services/open_weather_service/state/forecast_notifier.dart';
 import '../../services/open_weather_service/weather_service.dart';
 
 class const LocationStorage({super.key}) extends ConsumerWidget {
@@ -74,7 +75,7 @@ void main() => runApp(
       routes: {
         NavigationPaths.root: (context) => _prepareLocationStorage(),
         NavigationPaths.locationStorage: (context) => _prepareLocationStorage(),
-        NavigationPaths.selectLocation: (context) => LocationSelecting(),
+        NavigationPaths.selectLocation: (context) => LocationSelection(),
       },
     ),
   ),

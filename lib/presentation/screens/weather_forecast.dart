@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather_with_flutter/presentation/screens/location_storage.dart';
 
-import '../../app/di.dart';
-import '../../services/location/state/last_update_counter.dart';
+import '../../services/open_weather_service/state/forecast_notifier.dart';
 import '../widgets/day_compose.dart';
+import '../widgets/last_update_counter.dart';
 import '../widgets/weather_now.dart';
 
 class WeatherForecast extends ConsumerWidget {
@@ -44,16 +44,11 @@ class WeatherForecast extends ConsumerWidget {
                       padding: const EdgeInsets.only(right: 15),
                       child: LastUpdateCounter(
                         location: weather.value!.location,
-                        builder: (counter) => counter.when(
-                          data: (data) => _lastUpdateText(data),
-                          loading: () => Text('loading ...', style: TextStyle(fontSize: 10)),
-                          error: (err, stack) => Text('Error: $err', style: TextStyle(fontSize: 10)),
-                        ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 10),
-                  for (var i = 0; i < data.forecast.length; i++) ...[DayCompose(day: data.forecast[i])],
+                  for (var i = 0; i < data.forecast.length; i++) DayCompose(day: data.forecast[i]),
                 ],
               );
             },
@@ -67,15 +62,5 @@ class WeatherForecast extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  Widget _lastUpdateText(int lastUpdate) {
-    final date = DateTime(2026, 1, 1, 0, 0, lastUpdate);
-    final hour = date.hour;
-    if (hour != 0) return Text('last update: $hour hours ago', style: TextStyle(fontSize: 10));
-    final minute = date.minute;
-    if (minute != 0) return Text('last update: $minute minutes ago', style: TextStyle(fontSize: 10));
-    final second = date.second;
-    return Text('last update for: $second seconds ago', style: TextStyle(fontSize: 10));
   }
 }

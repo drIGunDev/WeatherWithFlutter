@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weather_with_flutter/app/di.dart';
 import 'package:weather_with_flutter/db/weather_db.dart';
+import 'package:weather_with_flutter/services/location/state/location_storage_notifier.dart';
 import 'package:weather_with_flutter/services/location/types/location.dart';
 import 'package:weather_with_flutter/tools/logger/log.dart';
 
@@ -33,7 +34,7 @@ void main() {
 
     final container = ProviderContainer.test(
       overrides: [
-        weatherDatabaseProvider.overrideWithValue(WeatherDatabase(NativeDatabase.memory())),
+        weatherDatabaseComponent.overrideWithValue(WeatherDatabase(NativeDatabase.memory())),
       ],
     );
 

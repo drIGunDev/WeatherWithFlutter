@@ -20,8 +20,8 @@ final class GeocodingNotifier extends AsyncNotifier<GeocodingState> {
     }
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final provider = ref.read(geocodingServiceProvider);
-      final results = GeocodingState(result: await provider.fetchLocations(params: params));
+      final service = ref.read(geocodingServiceComponent);
+      final results = GeocodingState(result: await service.fetchLocations(params: params));
       return results;
     });
   }

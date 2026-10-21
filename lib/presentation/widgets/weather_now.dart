@@ -18,8 +18,8 @@ class const WeatherNow({
   Widget build(BuildContext context) {
     final todayForecast = _forecast.first;
     final currentWeather = _getCurrentWeather(todayForecast);
-    final min = todayForecast.minTemperature().temperature;
-    final max = todayForecast.maxTemperature().temperature;
+    final min = todayForecast.minTemperature.temperature;
+    final max = todayForecast.maxTemperature.temperature;
     final weatherType = currentWeather != null ? WeatherLabels.name(context.l10n, currentWeather.item.type) : null;
     final temperature = currentWeather != null ? currentWeather.item.temperature.temperature.toString() : '';
     return Padding(

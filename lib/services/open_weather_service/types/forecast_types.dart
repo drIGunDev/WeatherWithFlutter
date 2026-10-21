@@ -11,25 +11,37 @@ final class DayForecast({
 typedef DaysForecast = List<DayForecast>;
 
 extension Infarior on DayForecast {
-  WeatherItem inferior() => hoursForecast.reduce((value, element) => value.item.type.type > element.item.type.type ? value : element).item;
+  WeatherItem get inferior => hoursForecast.reduce((value, element) => value.item.type.type > element.item.type.type ? value : element).item;
 
-  Temperature minTemperature() =>
+  Temperature get minTemperature =>
       hoursForecast.reduce((value, element) => value.item.temperature.celsius < element.item.temperature.celsius ? value : element).item.temperature;
 
-  Temperature maxTemperature() =>
+  Temperature get maxTemperature =>
       hoursForecast.reduce((value, element) => value.item.temperature.celsius > element.item.temperature.celsius ? value : element).item.temperature;
 
-  double minWind() => hoursForecast
+  double get minWind => hoursForecast
       .reduce((value, element) => value.item.wind.forceKmPerHour < element.item.wind.forceKmPerHour ? value : element)
       .item
       .wind
       .forceKmPerHour;
 
-  double maxWind() => hoursForecast
+  double get maxWind => hoursForecast
       .reduce((value, element) => value.item.wind.forceKmPerHour > element.item.wind.forceKmPerHour ? value : element)
       .item
       .wind
       .forceKmPerHour;
+
+  double get minGusts => hoursForecast
+      .reduce((value, element) => value.item.wind.gustsKmPerHour < element.item.wind.gustsKmPerHour ? value : element)
+      .item
+      .wind
+      .gustsKmPerHour;
+
+  double get maxGusts => hoursForecast
+      .reduce((value, element) => value.item.wind.gustsKmPerHour > element.item.wind.gustsKmPerHour ? value : element)
+      .item
+      .wind
+      .gustsKmPerHour;
 }
 
 extension ToDaysForecast on ForecastList {

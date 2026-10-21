@@ -5,16 +5,18 @@ import '../../app/di.dart';
 import '../../app/main.dart';
 import '../../app/themes.dart';
 import '../../services/location/geocoding_service.dart';
+import '../../services/location/state/location_storage_notifier.dart';
+import '../../services/open_weather_service/state/forecast_notifier.dart';
 import '../../services/open_weather_service/weather_service.dart';
 import '../../tools/wrapped.dart';
 import '../widgets/location_row.dart';
 
-class const LocationSelecting({super.key}) extends ConsumerStatefulWidget {
+class const LocationSelection({super.key}) extends ConsumerStatefulWidget {
   @override
-  ConsumerState<LocationSelecting> createState() => _GeocodingState();
+  ConsumerState<LocationSelection> createState() => _GeocodingState();
 }
 
-class _GeocodingState extends ConsumerState<LocationSelecting> {
+class _GeocodingState extends ConsumerState<LocationSelection> {
   final TextEditingController _query = TextEditingController();
 
   @override
@@ -133,7 +135,7 @@ void main() => runApp(
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.bgSurface,
       ),
-      home: const LocationSelecting(),
+      home: const LocationSelection(),
     ),
   ),
 );

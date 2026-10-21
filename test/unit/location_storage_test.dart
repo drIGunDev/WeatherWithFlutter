@@ -1,8 +1,8 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:weather_with_flutter/db/weather_db.dart';
-import 'package:weather_with_flutter/db/manager/location_manager.dart';
 import 'package:weather_with_flutter/db/manager/database_manager_impl.dart';
+import 'package:weather_with_flutter/db/manager/location_manager.dart';
+import 'package:weather_with_flutter/db/weather_db.dart';
 import 'package:weather_with_flutter/services/location/types/location.dart';
 import 'package:weather_with_flutter/tools/logger/log.dart';
 

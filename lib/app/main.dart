@@ -5,8 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather_with_flutter/presentation/screens/location_storage.dart';
 
 import '../l10n/app_localizations.dart';
-import '../presentation/screens/location_selecting.dart';
+import '../presentation/screens/location_selection.dart';
 import '../presentation/screens/weather_forecast.dart';
+import '../services/open_weather_service/state/forecast_notifier.dart';
 import '../services/open_weather_service/weather_service.dart';
 import 'di.dart';
 
@@ -23,7 +24,7 @@ abstract interface class AppParams {
 }
 
 Future<void> initializing(WidgetRef ref) async {
-  final locationManager = ref.read(locationDatabaseProvider);
+  final locationManager = ref.read(locationManagerComponent);
   final activeLocation = await locationManager.findActiveLocation();
   if (activeLocation != null) {
     final forecastProvider = ref.read(weatherForecastProvider.notifier);
@@ -43,7 +44,7 @@ void main() => runApp(
           routes: {
             NavigationPaths.root: (context) => WeatherForecast(),
             NavigationPaths.locationStorage: (context) => LocationStorage(),
-            NavigationPaths.selectLocation: (context) => LocationSelecting(),
+            NavigationPaths.selectLocation: (context) => LocationSelection(),
           },
         );
       },

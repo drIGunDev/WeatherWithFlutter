@@ -25,8 +25,8 @@ final class ForecastNotifier extends AsyncNotifier<WeatherForecastState> {
   Future<void> fetchForecast({required WeatherForecastFetchParameters params}) async {
     state = AsyncValue.loading();
 
-    final forecastProvider = ref.read(forecastDatabaseProvider);
-    final haveToUpdate = await forecastProvider.haveToUpdateForecast(locationId: params.location.id, updateIntervalSec: AppParams.updateIntervalSec);
+    final forecastManager = ref.read(forecastManagerComponent);
+    final haveToUpdate = await forecastManager.haveToUpdateForecast(locationId: params.location.id, updateIntervalSec: AppParams.updateIntervalSec);
 
     if (haveToUpdate) {
       if (params.location.latitude == 0 && params.location.longitude == 0) {
@@ -35,17 +35,17 @@ final class ForecastNotifier extends AsyncNotifier<WeatherForecastState> {
       }
 
       state = await AsyncValue.guard(() async {
-        final provider = ref.read(meteoServiceProvider);
-        final forecast = await provider.fetchForecast(params: params);
+        final meteoService = ref.read(meteoServiceComponent);
+        final forecast = await meteoService.fetchForecast(params: params);
         final updatedLocation = params.location.copyWith(weatherUpdatedAt: Wrapped.value(DateTime.now()), isActive: true);
-        await forecastProvider.updateForecast(location: updatedLocation, forecast: forecast);
+        await forecastManager.updateForecast(location: updatedLocation, forecast: forecast);
         return WeatherForecastState(forecast: forecast.toDaysForecast(), location: updatedLocation);
       });
     } else {
       state = await AsyncValue.guard(() async {
-        final locationManager = ref.read(locationDatabaseProvider);
-        final forecast = await forecastProvider.fetchForecast(location: params.location);
-        final location = await locationManager.findLocationById(params.location.id);
+        final manager = ref.read(locationManagerComponent);
+        final forecast = await forecastManager.fetchForecast(location: params.location);
+        final location = await manager.findLocationById(params.location.id);
         return WeatherForecastState(forecast: forecast.toDaysForecast(), location: location);
       });
     }
@@ -53,9 +53,11 @@ final class ForecastNotifier extends AsyncNotifier<WeatherForecastState> {
 
   Future<void> delete({required Location location}) async {
     state = AsyncValue.data(.empty);
-    final forecastProvider = ref.read(forecastDatabaseProvider);
+    final forecastProvider = ref.read(forecastManagerComponent);
     await forecastProvider.deleteForecast(location: location);
-    final locationManager = ref.read(locationDatabaseProvider);
+    final locationManager = ref.read(locationManagerComponent);
     await locationManager.deleteLocation(location: location);
   }
 }
+
+final weatherForecastProvider = AsyncNotifierProvider<ForecastNotifier, WeatherForecastState>(ForecastNotifier.new);

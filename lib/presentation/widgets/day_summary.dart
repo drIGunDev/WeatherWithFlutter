@@ -10,71 +10,59 @@ class const DaySummary({
   super.key,
   required final DayForecast day,
 }) extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    //
-    return Card(
-      color: Colors.transparent,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Container(
-        width: double.infinity,
-        padding: .all(5),
-        // decoration: BoxDecoration(
-        //   border: Border.all(color: Colors.black),
-        //   borderRadius: BorderRadius.circular(10),
-        // ),
-        color: Colors.transparent,
-        child: _DayRow(day: day),
-      ),
-    );
-  }
-}
 
-class const _DayRow({
-  super.key,
-  required final DayForecast day,
-}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final date = day.hoursForecast.first.start;
-    final inferior = day.inferior();
+    final inferior = day.inferior;
     final weatherType = WeatherLabels.name(context.l10n, inferior.type);
-    final minTemperature = day.minTemperature();
-    final maxTemperature = day.maxTemperature();
-    final minWind = day.minWind();
-    final maxWind = day.maxWind();
+    final minTemperature = day.minTemperature;
+    final maxTemperature = day.maxTemperature;
+    final minWind = day.minWind;
+    final maxWind = day.maxWind;
+    final maxGusts = day.maxGusts;
+    final minGusts = day.minGusts;
     final textStyle = TextStyle(fontSize: 14, fontWeight: .bold, color: Colors.white);
-    return Row(
-      children: [
-        Column(
-          children: [
-            Text(DateTimeFormat.dayShort(context.l10n, date), style: TextStyle(fontSize: 14, fontWeight: .bold)),
-            WeatherEmoji(type: inferior.type, date: date, size: 40),
-            Text('${inferior.precipitation.amountMm} %', style: textStyle),
-            Text(weatherType, style: textStyle),
-          ],
-        ),
-        const SizedBox(width: 20),
-        Expanded(
-          child: SizedBox(
-            height: 120,
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                Text(
-                  '🌡️ min: ${minTemperature.temperature}°, max: ${maxTemperature.temperature}°',
-                  style: textStyle,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  '༄ min: ${minWind.toStringAsFixed(1)} km/h, max: ${maxWind.toStringAsFixed(1)} km/h',
-                  style: textStyle,
-                ),
-              ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Column(
+            children: [
+              Text(DateTimeFormat.dayShort(context.l10n, date), style: textStyle),
+              WeatherEmoji(type: inferior.type, date: date, size: 40),
+              Text('${inferior.precipitation.amountMm} %', style: textStyle),
+              Text(weatherType, style: textStyle),
+            ],
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: SizedBox(
+              height: 120,
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  Text(
+                    '🌡️ min: ${minTemperature.temperature}°, max: ${maxTemperature.temperature}°',
+                    style: textStyle,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    '࿐ min: ${minWind.toStringAsFixed(1)} km/h, max: ${maxWind.toStringAsFixed(1)} km/h',
+                    style: textStyle,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    '༄ min: ${minGusts.toStringAsFixed(1)} km/h, max: ${maxGusts.toStringAsFixed(1)} km/h',
+                    style: textStyle,
+                  ),
+
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

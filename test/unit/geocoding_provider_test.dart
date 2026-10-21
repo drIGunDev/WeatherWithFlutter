@@ -8,7 +8,7 @@ import 'package:weather_with_flutter/tools/logger/log.dart';
 void main() {
   test('test geocoding provider', () async {
     final container = ProviderContainer.test();
-    final geocoding = container.read(geocodingServiceProvider);
+    final geocoding = container.read(geocodingServiceComponent);
     final locations = await geocoding.fetchLocations(params: GeocodingFetchParameters(name: 'London'));
     if (kDebugMode) {
       Log.d(locations);
