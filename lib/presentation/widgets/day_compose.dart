@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weather_with_flutter/services/open_weather_service/types/forecast_types.dart';
 
+import '../../app/themes.dart';
 import 'day_hours.dart';
 import 'day_summary.dart';
 
@@ -21,7 +22,7 @@ class _DayComposeState extends State<DayCompose> {
       padding: const EdgeInsets.all(5.0),
       child: Center(
         child: Card(
-          color: Colors.blueGrey,
+          color: AppColors.bgWeatherCard,
           child: Column(
             children: [
               Material(

@@ -12,6 +12,7 @@ typedef DaysForecast = List<DayForecast>;
 
 extension Infarior on DayForecast {
   Event<WeatherItem> get inferior => hoursForecast.reduce((value, element) => value.item.type.type > element.item.type.type ? value : element);
+
   Event<WeatherItem> get superior => hoursForecast.reduce((value, element) => value.item.type.type < element.item.type.type ? value : element);
 
   Temperature get minTemperature =>

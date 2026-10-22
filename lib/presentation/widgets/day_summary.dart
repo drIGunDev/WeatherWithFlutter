@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_with_flutter/app/themes.dart';
 
 import '../../l10n/l10n_context.dart';
 import '../../services/open_weather_service/types/event.dart';
@@ -14,46 +15,66 @@ class const DaySummary({
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final textStyle = TextStyle(fontSize: 14, fontWeight: .bold, color: Colors.white);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: .start,
         children: [
-          Text(DateTimeFormat.dayShort(context.l10n, day.hoursForecast.first.start), style: textStyle),
-          const SizedBox(height: 10),
+          Text(DateTimeFormat.dayShort(context.l10n, day.hoursForecast.first.start), style: AppTextStyles.textLarge.copyWith(fontWeight: .bold)),
+
+          const SizedBox(height: 20),
+
           Row(
             mainAxisAlignment: .spaceEvenly,
             children: [
               if (day.superior.start.millisecondsSinceEpoch < day.inferior.start.millisecondsSinceEpoch) ...[
-                _supremeWeather(day.superior),
+                _supremeWeather('superior', day.superior),
+
                 const SizedBox(height: 20),
-                _supremeWeather(day.inferior),
+
+                _supremeWeather('inferior', day.inferior),
               ] else ...[
-                _supremeWeather(day.inferior),
+                _supremeWeather('inferior', day.inferior),
+
                 const SizedBox(height: 20),
-                _supremeWeather(day.superior),
+
+                _supremeWeather('superior', day.superior),
               ],
             ],
           ),
+
           const SizedBox(height: 20),
+
           _stat(),
         ],
       ),
     );
   }
 
-  Widget _supremeWeather(Event<WeatherItem> event) {
+  Widget _supremeWeather(String title, Event<WeatherItem> event) {
     final item = event.item;
-    final textStyle = TextStyle(fontSize: 14, fontWeight: .bold, color: Colors.white);
+    final textStyle = AppTextStyles.textMedium.copyWith(fontWeight: .bold);
     return Builder(
       builder: (context) {
         final inferiorWeatherType = WeatherLabels.name(context.l10n, item.type);
         return Column(
+          mainAxisAlignment: .center,
+          crossAxisAlignment: .center,
           children: [
+            Text(title, style: textStyle),
+
+            const SizedBox(height: 5),
+
             Text(DateTimeFormat.time(event.start), style: textStyle),
+
+            const SizedBox(height: 5),
+
+            Text('${item.temperature.temperature}°', style: textStyle.copyWith(fontSize: 20)),
             WeatherEmoji(type: item.type, date: event.start, size: 40),
-            if (item.precipitation.probabilityPercent > 0) Text('${item.precipitation.probabilityPercent} %', style: textStyle),
+            item.precipitation.probabilityPercent > 0 ? Text('${item.precipitation.probabilityPercent} %', style: textStyle) : Text(''),
+
+            const SizedBox(height: 5),
+
             Text(inferiorWeatherType, style: textStyle),
           ],
         );
@@ -68,33 +89,42 @@ class const DaySummary({
     final maxWind = day.maxWind;
     final maxGusts = day.maxGusts;
     final minGusts = day.minGusts;
-    final textStyle = TextStyle(fontSize: 11, color: Colors.white);
+    final textStyle = AppTextStyles.textMedium;
     return Row(
       mainAxisAlignment: .spaceAround,
       crossAxisAlignment: .start,
       children: [
-        Column(
-          children: [
-            Text(
-              '🌡️ min: ${minTemperature.temperature}°, max: ${maxTemperature.temperature}°',
-              style: textStyle,
-            ),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: .center,
+            children: [
+              Text(
+                '🌡️ ${minTemperature.temperature} --- ${maxTemperature.temperature}°C',
+                style: textStyle,
+              ),
+            ],
+          ),
         ),
+
         const SizedBox(height: 10),
-        Column(
-          crossAxisAlignment: .start,
-          children: [
-            Text(
-              '࿐ min: ${minWind.toStringAsFixed(1)} km/h, max: ${maxWind.toStringAsFixed(1)} km/h',
-              style: textStyle,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              '༄ min: ${minGusts.toStringAsFixed(1)} km/h, max: ${maxGusts.toStringAsFixed(1)} km/h',
-              style: textStyle,
-            ),
-          ],
+
+        Expanded(
+          child: Column(
+            crossAxisAlignment: .center,
+            children: [
+              Text(
+                '࿐ ${minWind.toStringAsFixed(1)} --- ${maxWind.toStringAsFixed(1)} km/h',
+                style: textStyle,
+              ),
+
+              const SizedBox(height: 10),
+
+              Text(
+                '༄ ${minGusts.toStringAsFixed(1)} --- ${maxGusts.toStringAsFixed(1)} km/h',
+                style: textStyle,
+              ),
+            ],
+          ),
         ),
       ],
     );

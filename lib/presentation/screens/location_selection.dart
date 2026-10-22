@@ -18,6 +18,7 @@ class const LocationSelection({super.key}) extends ConsumerStatefulWidget {
 
 class _GeocodingState extends ConsumerState<LocationSelection> {
   final TextEditingController _query = TextEditingController();
+  var _isSearchEnable = false;
 
   @override
   void dispose() {
@@ -27,53 +28,56 @@ class _GeocodingState extends ConsumerState<LocationSelection> {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = AppTextStyles.textMedium;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Set location',
-          style: TextStyle(fontSize: AppFontSizes.extraLarge, fontWeight: FontWeight.bold),
+          style: AppTextStyles.scaffoldBarHeader.copyWith(color: Colors.black),
         ),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: AppColors.bgScaffold,
       ),
+      backgroundColor: AppColors.bgSurface,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.large),
           children: [
-            Text(
-              'Search city or place',
-              style: TextStyle(
-                fontSize: AppFontSizes.small,
-                fontWeight: FontWeight.normal,
-                color: AppColors.descriptionText,
-              ),
-            ),
+            Text('Search city or place', style: textStyle),
 
             const SizedBox(height: 10),
 
             TextField(
               controller: _query,
-              decoration: const InputDecoration(
+              style: AppTextStyles.textLarge,
+              decoration: InputDecoration(
                 hintText: 'City',
+                hintStyle: AppTextStyles.textLarge.copyWith(color: Colors.grey),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 1, style: .solid),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 1, style: .solid),
+                ),
               ),
               autofocus: true,
+              cursorColor: Colors.white,
+              onChanged: (value) {
+                setState(() {
+                  _isSearchEnable = value.length > 2;
+                });
+              },
+              onSubmitted: (value) async => _search(value),
             ),
 
             const SizedBox(height: 25),
 
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.buttonColor,
-                foregroundColor: Colors.white,
-              ),
-              onPressed: () async {
-                final name = _query.text;
-                ref.read(geocodingProvider.notifier).fetchLocations(params: GeocodingFetchParameters(name: name, count: 20));
-              },
+              style: _isSearchEnable ? ButtonStyle() : ButtonStyle(backgroundColor: WidgetStateProperty.all(Colors.grey)),
+              onPressed: () async => _search(_query.text),
               child: Text('Search'),
             ),
 
-            const SizedBox(height: 25),
+            const SizedBox(height: 50),
 
             Builder(
               builder: (context) {
@@ -84,15 +88,7 @@ class _GeocodingState extends ConsumerState<LocationSelection> {
                       crossAxisAlignment: .start,
                       children: [
                         if (data.result.isNotEmpty)
-                          Text(
-                            'Select a location'.toUpperCase(),
-                            style: TextStyle(
-                              fontSize: AppFontSizes.medium,
-                              fontWeight: FontWeight.normal,
-                              letterSpacing: 0.5,
-                              color: AppColors.descriptionText,
-                            ),
-                          ),
+                          Text('Select a location'.toUpperCase(), style: AppTextStyles.textMedium.copyWith(letterSpacing: 0.5)),
 
                         const SizedBox(height: 16),
 
@@ -101,7 +97,6 @@ class _GeocodingState extends ConsumerState<LocationSelection> {
                             location: location,
                             onTap: () async {
                               Navigator.pushReplacementNamed(context, NavigationPaths.root);
-
                               final selectedLocation = location.copyWith(weatherUpdatedAt: Wrapped.value(DateTime.now()), isActive: true);
                               ref.read(locationStorageProvider.notifier).addate(location: selectedLocation);
                               ref.read(geocodingProvider.notifier).reset();
@@ -114,8 +109,8 @@ class _GeocodingState extends ConsumerState<LocationSelection> {
                       ],
                     );
                   },
-                  loading: () => Center(child: const CircularProgressIndicator()),
-                  error: (err, stack) => Text('Error: $err'),
+                  loading: () => Center(child: const CircularProgressIndicator(color: Colors.white)),
+                  error: (err, stack) => Text('Error: $err', style: AppTextStyles.textSmall),
                 );
               },
             ),
@@ -124,18 +119,8 @@ class _GeocodingState extends ConsumerState<LocationSelection> {
       ),
     );
   }
-}
 
-///
-/// Test geocoding service
-///
-void main() => runApp(
-  ProviderScope(
-    child: MaterialApp(
-      theme: ThemeData(
-        scaffoldBackgroundColor: AppColors.bgSurface,
-      ),
-      home: const LocationSelection(),
-    ),
-  ),
-);
+  Future<void> _search(String query) async {
+    await ref.read(geocodingProvider.notifier).fetchLocations(params: GeocodingFetchParameters(name: query, count: 20));
+  }
+}

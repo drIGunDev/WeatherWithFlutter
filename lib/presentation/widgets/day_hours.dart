@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_with_flutter/app/themes.dart';
 
 import '../../services/open_weather_service/types/forecast_types.dart';
 import 'hour_row.dart';
@@ -29,13 +30,14 @@ class const DayHours({
               ),
           ],
         ],
+
         const SizedBox(height: 15),
       ],
     );
   }
 
   Widget _tableHeader() {
-    final headerTextStyle = TextStyle(fontSize: 14, fontWeight: .bold, color: Colors.white);
+    final headerTextStyle = AppTextStyles.textMedium.copyWith(fontWeight: .bold);
     return Row(
       mainAxisAlignment: .spaceAround,
       children: [

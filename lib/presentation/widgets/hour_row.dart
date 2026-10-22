@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_with_flutter/app/themes.dart';
 
 import '../../l10n/l10n_context.dart';
 import '../../services/open_weather_service/types/event.dart';
@@ -12,7 +13,7 @@ class const HourRow({super.key, required final Event<WeatherItem> event}) extend
   Widget build(BuildContext context) {
     final item = event.item;
     final weatherType = WeatherLabels.name(context.l10n, item.type);
-    final textStyle = TextStyle(fontSize: 14, fontWeight: .bold, color: Colors.white);
+    final textStyle = AppTextStyles.textMedium.copyWith(fontWeight: .bold);
     return Row(
       mainAxisAlignment: .spaceAround,
       children: [
