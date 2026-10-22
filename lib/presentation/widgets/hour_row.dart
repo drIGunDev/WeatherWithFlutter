@@ -12,22 +12,20 @@ class const HourRow({super.key, required final Event<WeatherItem> event}) extend
   Widget build(BuildContext context) {
     final item = event.item;
     final weatherType = WeatherLabels.name(context.l10n, item.type);
-    final textStyle = event.start.microsecondsSinceEpoch >= DateTime.now().microsecondsSinceEpoch
-        ? TextStyle(fontSize: 14, fontWeight: .bold)
-        : TextStyle(fontSize: 14, fontWeight: .bold, color: Colors.grey);
+    final textStyle = TextStyle(fontSize: 14, fontWeight: .bold, color: Colors.white);
     return Row(
       mainAxisAlignment: .spaceAround,
       children: [
         Text(DateTimeFormat.time(event.start), style: textStyle),
         Column(
           children: [
-            WeatherEmoji(type: event.item.type, date: event.start, size: 30),
-            Text('${item.precipitation.amountMm} %', style: textStyle),
+            WeatherEmoji(type: event.item.type, date: event.start, size: 40),
+            if (item.precipitation.probabilityPercent > 0) Text('${item.precipitation.probabilityPercent} %', style: textStyle),
             Text(weatherType, style: textStyle),
           ],
         ),
         Text('${item.temperature.temperature}°', style: textStyle),
-        Text('${item.wind.forceKmPerHour}', style: textStyle),
+        Text('${item.wind.forceKmPerHour} km/h', style: textStyle),
       ],
     );
   }

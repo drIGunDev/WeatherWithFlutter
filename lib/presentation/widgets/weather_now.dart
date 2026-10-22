@@ -22,6 +22,7 @@ class const WeatherNow({
     final max = todayForecast.maxTemperature.temperature;
     final weatherType = currentWeather != null ? WeatherLabels.name(context.l10n, currentWeather.item.type) : null;
     final temperature = currentWeather != null ? currentWeather.item.temperature.temperature.toString() : '';
+    final textColor = Colors.white;
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: Column(
@@ -30,7 +31,7 @@ class const WeatherNow({
           if (_location != null)
             Text(
               _location.name,
-              style: TextStyle(fontSize: AppFontSizes.extraLarge, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: AppFontSizes.extraLarge, fontWeight: FontWeight.bold, color: textColor),
             ),
           const SizedBox(height: 10),
           if (currentWeather != null) WeatherEmoji(type: currentWeather.item.type, date: currentWeather.start, size: 100),
@@ -38,7 +39,7 @@ class const WeatherNow({
           if (currentWeather != null)
             Text(
               weatherType ?? currentWeather.item.type.name,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textColor),
             ),
           const SizedBox(height: 10),
           if (currentWeather != null)
@@ -47,18 +48,19 @@ class const WeatherNow({
               children: [
                 Text(
                   '$temperature°',
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: textColor),
                 ),
                 const SizedBox(width: 10),
                 Column(
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       'min: $min°',
-                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: textColor),
                     ),
                     Text(
                       'max: $max°',
-                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: textColor),
                     ),
                   ],
                 ),

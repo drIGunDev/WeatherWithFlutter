@@ -13,10 +13,10 @@ class WeatherForecast extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final weather = ref.watch(weatherForecastProvider);
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("Weather with flutter"),
+        title: Text("Weather forecast with flutter", style: TextStyle(fontSize: 18, fontWeight: .normal),),
+        backgroundColor: Colors.amber,
       ),
       drawer: Drawer(
         child: Column(
@@ -27,6 +27,7 @@ class WeatherForecast extends ConsumerWidget {
           ],
         ),
       ),
+      backgroundColor: Colors.lightBlue,
       body: SafeArea(
         child: Center(
           child: weather.when(
@@ -57,7 +58,7 @@ class WeatherForecast extends ConsumerWidget {
                 Text('loading ...', style: TextStyle(fontSize: 13)),
               ],
             ),
-            error: (err, stack) => Text('Error: $err'),
+            error: (err, _) => Text('Error: $err'),
           ),
         ),
       ),

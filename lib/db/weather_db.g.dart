@@ -3,13 +3,12 @@
 part of 'weather_db.dart';
 
 // ignore_for_file: type=lint
-class $LocationTableTable extends LocationTable with TableInfo<$LocationTableTable, LocationTableData> {
+class $LocationTableTable extends LocationTable
+    with TableInfo<$LocationTableTable, LocationTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-
   $LocationTableTable(this.attachedDatabase, [this._alias]);
-
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -111,15 +110,15 @@ class $LocationTableTable extends LocationTable with TableInfo<$LocationTableTab
     'weatherUpdatedAt',
   );
   @override
-  late final GeneratedColumn<DateTime> weatherUpdatedAt = GeneratedColumn<DateTime>(
-    'weather_updated_at',
-    aliasedName,
-    true,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(null),
-  );
-
+  late final GeneratedColumn<DateTime> weatherUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'weather_updated_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(null),
+      );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -133,14 +132,11 @@ class $LocationTableTable extends LocationTable with TableInfo<$LocationTableTab
     isActive,
     weatherUpdatedAt,
   ];
-
   @override
   String get aliasedName => _alias ?? actualTableName;
-
   @override
   String get actualTableName => $name;
   static const String $name = 'location_table';
-
   @override
   VerificationContext validateIntegrity(
     Insertable<LocationTableData> instance, {
@@ -232,7 +228,6 @@ class $LocationTableTable extends LocationTable with TableInfo<$LocationTableTab
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-
   @override
   LocationTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -286,7 +281,8 @@ class $LocationTableTable extends LocationTable with TableInfo<$LocationTableTab
   }
 }
 
-class LocationTableData extends DataClass implements Insertable<LocationTableData> {
+class LocationTableData extends DataClass
+    implements Insertable<LocationTableData> {
   final String id;
   final String name;
   final double latitude;
@@ -297,7 +293,6 @@ class LocationTableData extends DataClass implements Insertable<LocationTableDat
   final String timezone;
   final bool isActive;
   final DateTime? weatherUpdatedAt;
-
   const LocationTableData({
     required this.id,
     required this.name,
@@ -310,7 +305,6 @@ class LocationTableData extends DataClass implements Insertable<LocationTableDat
     required this.isActive,
     this.weatherUpdatedAt,
   });
-
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -340,7 +334,9 @@ class LocationTableData extends DataClass implements Insertable<LocationTableDat
       city: Value(city),
       timezone: Value(timezone),
       isActive: Value(isActive),
-      weatherUpdatedAt: weatherUpdatedAt == null && nullToAbsent ? const Value.absent() : Value(weatherUpdatedAt),
+      weatherUpdatedAt: weatherUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weatherUpdatedAt),
     );
   }
 
@@ -364,7 +360,6 @@ class LocationTableData extends DataClass implements Insertable<LocationTableDat
       ),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -403,9 +398,10 @@ class LocationTableData extends DataClass implements Insertable<LocationTableDat
     city: city ?? this.city,
     timezone: timezone ?? this.timezone,
     isActive: isActive ?? this.isActive,
-    weatherUpdatedAt: weatherUpdatedAt.present ? weatherUpdatedAt.value : this.weatherUpdatedAt,
+    weatherUpdatedAt: weatherUpdatedAt.present
+        ? weatherUpdatedAt.value
+        : this.weatherUpdatedAt,
   );
-
   LocationTableData copyWithCompanion(LocationTableCompanion data) {
     return LocationTableData(
       id: data.id.present ? data.id.value : this.id,
@@ -413,11 +409,15 @@ class LocationTableData extends DataClass implements Insertable<LocationTableDat
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
       country: data.country.present ? data.country.value : this.country,
-      countryCode: data.countryCode.present ? data.countryCode.value : this.countryCode,
+      countryCode: data.countryCode.present
+          ? data.countryCode.value
+          : this.countryCode,
       city: data.city.present ? data.city.value : this.city,
       timezone: data.timezone.present ? data.timezone.value : this.timezone,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
-      weatherUpdatedAt: data.weatherUpdatedAt.present ? data.weatherUpdatedAt.value : this.weatherUpdatedAt,
+      weatherUpdatedAt: data.weatherUpdatedAt.present
+          ? data.weatherUpdatedAt.value
+          : this.weatherUpdatedAt,
     );
   }
 
@@ -451,7 +451,6 @@ class LocationTableData extends DataClass implements Insertable<LocationTableDat
     isActive,
     weatherUpdatedAt,
   );
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -480,7 +479,6 @@ class LocationTableCompanion extends UpdateCompanion<LocationTableData> {
   final Value<bool> isActive;
   final Value<DateTime?> weatherUpdatedAt;
   final Value<int> rowid;
-
   const LocationTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -494,7 +492,6 @@ class LocationTableCompanion extends UpdateCompanion<LocationTableData> {
     this.weatherUpdatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-
   LocationTableCompanion.insert({
     required String id,
     required String name,
@@ -515,7 +512,6 @@ class LocationTableCompanion extends UpdateCompanion<LocationTableData> {
        countryCode = Value(countryCode),
        city = Value(city),
        timezone = Value(timezone);
-
   static Insertable<LocationTableData> custom({
     Expression<String>? id,
     Expression<String>? name,
@@ -630,13 +626,12 @@ class LocationTableCompanion extends UpdateCompanion<LocationTableData> {
   }
 }
 
-class $WeatherTableTable extends WeatherTable with TableInfo<$WeatherTableTable, WeatherTableData> {
+class $WeatherTableTable extends WeatherTable
+    with TableInfo<$WeatherTableTable, WeatherTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-
   $WeatherTableTable(this.attachedDatabase, [this._alias]);
-
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -688,15 +683,17 @@ class $WeatherTableTable extends WeatherTable with TableInfo<$WeatherTableTable,
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _apparentTemperatureMeta = const VerificationMeta('apparentTemperature');
+  static const VerificationMeta _apparentTemperatureMeta =
+      const VerificationMeta('apparentTemperature');
   @override
-  late final GeneratedColumn<double> apparentTemperature = GeneratedColumn<double>(
-    'apparent_temperature',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumn<double> apparentTemperature =
+      GeneratedColumn<double>(
+        'apparent_temperature',
+        aliasedName,
+        false,
+        type: DriftSqlType.double,
+        requiredDuringInsert: true,
+      );
   static const VerificationMeta _windForceMeta = const VerificationMeta(
     'windForce',
   );
@@ -723,31 +720,36 @@ class $WeatherTableTable extends WeatherTable with TableInfo<$WeatherTableTable,
     'windDirectionGrad',
   );
   @override
-  late final GeneratedColumn<double> windDirectionGrad = GeneratedColumn<double>(
-    'wind_direction_grad',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _precipitationPercentMeta = const VerificationMeta('precipitationPercent');
+  late final GeneratedColumn<double> windDirectionGrad =
+      GeneratedColumn<double>(
+        'wind_direction_grad',
+        aliasedName,
+        false,
+        type: DriftSqlType.double,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _precipitationPercentMeta =
+      const VerificationMeta('precipitationPercent');
   @override
-  late final GeneratedColumn<double> precipitationPercent = GeneratedColumn<double>(
-    'precipitation_percent',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _precipitationAmountMmMeta = const VerificationMeta('precipitationAmountMm');
+  late final GeneratedColumn<double> precipitationPercent =
+      GeneratedColumn<double>(
+        'precipitation_percent',
+        aliasedName,
+        false,
+        type: DriftSqlType.double,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _precipitationAmountMmMeta =
+      const VerificationMeta('precipitationAmountMm');
   @override
-  late final GeneratedColumn<double> precipitationAmountMm = GeneratedColumn<double>(
-    'precipitation_amount_mm',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumn<double> precipitationAmountMm =
+      GeneratedColumn<double>(
+        'precipitation_amount_mm',
+        aliasedName,
+        false,
+        type: DriftSqlType.double,
+        requiredDuringInsert: true,
+      );
   static const VerificationMeta _rainMeta = const VerificationMeta('rain');
   @override
   late final GeneratedColumn<double> rain = GeneratedColumn<double>(
@@ -771,7 +773,6 @@ class $WeatherTableTable extends WeatherTable with TableInfo<$WeatherTableTable,
       'REFERENCES location_table (id) ON DELETE CASCADE',
     ),
   );
-
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -788,14 +789,11 @@ class $WeatherTableTable extends WeatherTable with TableInfo<$WeatherTableTable,
     rain,
     locationId,
   ];
-
   @override
   String get aliasedName => _alias ?? actualTableName;
-
   @override
   String get actualTableName => $name;
   static const String $name = 'weather_table';
-
   @override
   VerificationContext validateIntegrity(
     Insertable<WeatherTableData> instance, {
@@ -922,7 +920,6 @@ class $WeatherTableTable extends WeatherTable with TableInfo<$WeatherTableTable,
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-
   @override
   WeatherTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -988,7 +985,8 @@ class $WeatherTableTable extends WeatherTable with TableInfo<$WeatherTableTable,
   }
 }
 
-class WeatherTableData extends DataClass implements Insertable<WeatherTableData> {
+class WeatherTableData extends DataClass
+    implements Insertable<WeatherTableData> {
   final int id;
   final DateTime start;
   final DateTime end;
@@ -1002,7 +1000,6 @@ class WeatherTableData extends DataClass implements Insertable<WeatherTableData>
   final double precipitationAmountMm;
   final double rain;
   final String locationId;
-
   const WeatherTableData({
     required this.id,
     required this.start,
@@ -1018,7 +1015,6 @@ class WeatherTableData extends DataClass implements Insertable<WeatherTableData>
     required this.rain,
     required this.locationId,
   });
-
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1083,7 +1079,6 @@ class WeatherTableData extends DataClass implements Insertable<WeatherTableData>
       locationId: serializer.fromJson<String>(json['locationId']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -1133,22 +1128,33 @@ class WeatherTableData extends DataClass implements Insertable<WeatherTableData>
     rain: rain ?? this.rain,
     locationId: locationId ?? this.locationId,
   );
-
   WeatherTableData copyWithCompanion(WeatherTableCompanion data) {
     return WeatherTableData(
       id: data.id.present ? data.id.value : this.id,
       start: data.start.present ? data.start.value : this.start,
       end: data.end.present ? data.end.value : this.end,
       type: data.type.present ? data.type.value : this.type,
-      temperature: data.temperature.present ? data.temperature.value : this.temperature,
-      apparentTemperature: data.apparentTemperature.present ? data.apparentTemperature.value : this.apparentTemperature,
+      temperature: data.temperature.present
+          ? data.temperature.value
+          : this.temperature,
+      apparentTemperature: data.apparentTemperature.present
+          ? data.apparentTemperature.value
+          : this.apparentTemperature,
       windForce: data.windForce.present ? data.windForce.value : this.windForce,
       windGusts: data.windGusts.present ? data.windGusts.value : this.windGusts,
-      windDirectionGrad: data.windDirectionGrad.present ? data.windDirectionGrad.value : this.windDirectionGrad,
-      precipitationPercent: data.precipitationPercent.present ? data.precipitationPercent.value : this.precipitationPercent,
-      precipitationAmountMm: data.precipitationAmountMm.present ? data.precipitationAmountMm.value : this.precipitationAmountMm,
+      windDirectionGrad: data.windDirectionGrad.present
+          ? data.windDirectionGrad.value
+          : this.windDirectionGrad,
+      precipitationPercent: data.precipitationPercent.present
+          ? data.precipitationPercent.value
+          : this.precipitationPercent,
+      precipitationAmountMm: data.precipitationAmountMm.present
+          ? data.precipitationAmountMm.value
+          : this.precipitationAmountMm,
       rain: data.rain.present ? data.rain.value : this.rain,
-      locationId: data.locationId.present ? data.locationId.value : this.locationId,
+      locationId: data.locationId.present
+          ? data.locationId.value
+          : this.locationId,
     );
   }
 
@@ -1188,7 +1194,6 @@ class WeatherTableData extends DataClass implements Insertable<WeatherTableData>
     rain,
     locationId,
   );
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1222,7 +1227,6 @@ class WeatherTableCompanion extends UpdateCompanion<WeatherTableData> {
   final Value<double> precipitationAmountMm;
   final Value<double> rain;
   final Value<String> locationId;
-
   const WeatherTableCompanion({
     this.id = const Value.absent(),
     this.start = const Value.absent(),
@@ -1238,7 +1242,6 @@ class WeatherTableCompanion extends UpdateCompanion<WeatherTableData> {
     this.rain = const Value.absent(),
     this.locationId = const Value.absent(),
   });
-
   WeatherTableCompanion.insert({
     this.id = const Value.absent(),
     required DateTime start,
@@ -1265,7 +1268,6 @@ class WeatherTableCompanion extends UpdateCompanion<WeatherTableData> {
        precipitationAmountMm = Value(precipitationAmountMm),
        rain = Value(rain),
        locationId = Value(locationId);
-
   static Insertable<WeatherTableData> custom({
     Expression<int>? id,
     Expression<DateTime>? start,
@@ -1287,12 +1289,15 @@ class WeatherTableCompanion extends UpdateCompanion<WeatherTableData> {
       if (end != null) 'end': end,
       if (type != null) 'type': type,
       if (temperature != null) 'temperature': temperature,
-      if (apparentTemperature != null) 'apparent_temperature': apparentTemperature,
+      if (apparentTemperature != null)
+        'apparent_temperature': apparentTemperature,
       if (windForce != null) 'wind_force': windForce,
       if (windGusts != null) 'wind_gusts': windGusts,
       if (windDirectionGrad != null) 'wind_direction_grad': windDirectionGrad,
-      if (precipitationPercent != null) 'precipitation_percent': precipitationPercent,
-      if (precipitationAmountMm != null) 'precipitation_amount_mm': precipitationAmountMm,
+      if (precipitationPercent != null)
+        'precipitation_percent': precipitationPercent,
+      if (precipitationAmountMm != null)
+        'precipitation_amount_mm': precipitationAmountMm,
       if (rain != null) 'rain': rain,
       if (locationId != null) 'location_id': locationId,
     });
@@ -1324,7 +1329,8 @@ class WeatherTableCompanion extends UpdateCompanion<WeatherTableData> {
       windGusts: windGusts ?? this.windGusts,
       windDirectionGrad: windDirectionGrad ?? this.windDirectionGrad,
       precipitationPercent: precipitationPercent ?? this.precipitationPercent,
-      precipitationAmountMm: precipitationAmountMm ?? this.precipitationAmountMm,
+      precipitationAmountMm:
+          precipitationAmountMm ?? this.precipitationAmountMm,
       rain: rain ?? this.rain,
       locationId: locationId ?? this.locationId,
     );
@@ -1402,20 +1408,17 @@ class WeatherTableCompanion extends UpdateCompanion<WeatherTableData> {
 
 abstract class _$WeatherDatabase extends GeneratedDatabase {
   _$WeatherDatabase(QueryExecutor e) : super(e);
-
   $WeatherDatabaseManager get managers => $WeatherDatabaseManager(this);
   late final $LocationTableTable locationTable = $LocationTableTable(this);
   late final $WeatherTableTable weatherTable = $WeatherTableTable(this);
-
   @override
-  Iterable<TableInfo<Table, Object?>> get allTables => allSchemaEntities.whereType<TableInfo<Table, Object?>>();
-
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     locationTable,
     weatherTable,
   ];
-
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
     WritePropagation(
@@ -1428,45 +1431,53 @@ abstract class _$WeatherDatabase extends GeneratedDatabase {
   ]);
 }
 
-typedef $$LocationTableTableCreateCompanionBuilder = LocationTableCompanion Function({
-  required String id,
-  required String name,
-  required double latitude,
-  required double longitude,
-  required String country,
-  required String countryCode,
-  required String city,
-  required String timezone,
-  Value<bool> isActive,
-  Value<DateTime?> weatherUpdatedAt,
-  Value<int> rowid,
-});
-typedef $$LocationTableTableUpdateCompanionBuilder = LocationTableCompanion Function({
-  Value<String> id,
-  Value<String> name,
-  Value<double> latitude,
-  Value<double> longitude,
-  Value<String> country,
-  Value<String> countryCode,
-  Value<String> city,
-  Value<String> timezone,
-  Value<bool> isActive,
-  Value<DateTime?> weatherUpdatedAt,
-  Value<int> rowid,
-});
+typedef $$LocationTableTableCreateCompanionBuilder =
+    LocationTableCompanion Function({
+      required String id,
+      required String name,
+      required double latitude,
+      required double longitude,
+      required String country,
+      required String countryCode,
+      required String city,
+      required String timezone,
+      Value<bool> isActive,
+      Value<DateTime?> weatherUpdatedAt,
+      Value<int> rowid,
+    });
+typedef $$LocationTableTableUpdateCompanionBuilder =
+    LocationTableCompanion Function({
+      Value<String> id,
+      Value<String> name,
+      Value<double> latitude,
+      Value<double> longitude,
+      Value<String> country,
+      Value<String> countryCode,
+      Value<String> city,
+      Value<String> timezone,
+      Value<bool> isActive,
+      Value<DateTime?> weatherUpdatedAt,
+      Value<int> rowid,
+    });
 
-final class $$LocationTableTableReferences extends BaseReferences<_$WeatherDatabase, $LocationTableTable, LocationTableData> {
+final class $$LocationTableTableReferences
+    extends
+        BaseReferences<
+          _$WeatherDatabase,
+          $LocationTableTable,
+          LocationTableData
+        > {
   $$LocationTableTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
-  static MultiTypedResultKey<$WeatherTableTable, List<WeatherTableData>> _weatherTableRefsTable(_$WeatherDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.weatherTable,
-        aliasName: 'location_table__id__weather_table__location_id',
-      );
+  static MultiTypedResultKey<$WeatherTableTable, List<WeatherTableData>>
+  _weatherTableRefsTable(_$WeatherDatabase db) => MultiTypedResultKey.fromTable(
+    db.weatherTable,
+    aliasName: 'location_table__id__weather_table__location_id',
+  );
 
   $$WeatherTableTableProcessedTableManager get weatherTableRefs {
     final manager = $$WeatherTableTableTableManager(
@@ -1481,7 +1492,8 @@ final class $$LocationTableTableReferences extends BaseReferences<_$WeatherDatab
   }
 }
 
-class $$LocationTableTableFilterComposer extends Composer<_$WeatherDatabase, $LocationTableTable> {
+class $$LocationTableTableFilterComposer
+    extends Composer<_$WeatherDatabase, $LocationTableTable> {
   $$LocationTableTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -1489,7 +1501,6 @@ class $$LocationTableTableFilterComposer extends Composer<_$WeatherDatabase, $Lo
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-
   ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -1558,14 +1569,16 @@ class $$LocationTableTableFilterComposer extends Composer<_$WeatherDatabase, $Lo
             $table: $db.weatherTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return f(composer);
   }
 }
 
-class $$LocationTableTableOrderingComposer extends Composer<_$WeatherDatabase, $LocationTableTable> {
+class $$LocationTableTableOrderingComposer
+    extends Composer<_$WeatherDatabase, $LocationTableTable> {
   $$LocationTableTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -1573,7 +1586,6 @@ class $$LocationTableTableOrderingComposer extends Composer<_$WeatherDatabase, $
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-
   ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -1625,7 +1637,8 @@ class $$LocationTableTableOrderingComposer extends Composer<_$WeatherDatabase, $
   );
 }
 
-class $$LocationTableTableAnnotationComposer extends Composer<_$WeatherDatabase, $LocationTableTable> {
+class $$LocationTableTableAnnotationComposer
+    extends Composer<_$WeatherDatabase, $LocationTableTable> {
   $$LocationTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -1633,27 +1646,34 @@ class $$LocationTableTableAnnotationComposer extends Composer<_$WeatherDatabase,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<String> get name => $composableBuilder(column: $table.name, builder: (column) => column);
+  GeneratedColumn<double> get latitude =>
+      $composableBuilder(column: $table.latitude, builder: (column) => column);
 
-  GeneratedColumn<double> get latitude => $composableBuilder(column: $table.latitude, builder: (column) => column);
+  GeneratedColumn<double> get longitude =>
+      $composableBuilder(column: $table.longitude, builder: (column) => column);
 
-  GeneratedColumn<double> get longitude => $composableBuilder(column: $table.longitude, builder: (column) => column);
-
-  GeneratedColumn<String> get country => $composableBuilder(column: $table.country, builder: (column) => column);
+  GeneratedColumn<String> get country =>
+      $composableBuilder(column: $table.country, builder: (column) => column);
 
   GeneratedColumn<String> get countryCode => $composableBuilder(
     column: $table.countryCode,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get city => $composableBuilder(column: $table.city, builder: (column) => column);
+  GeneratedColumn<String> get city =>
+      $composableBuilder(column: $table.city, builder: (column) => column);
 
-  GeneratedColumn<String> get timezone => $composableBuilder(column: $table.timezone, builder: (column) => column);
+  GeneratedColumn<String> get timezone =>
+      $composableBuilder(column: $table.timezone, builder: (column) => column);
 
-  GeneratedColumn<bool> get isActive => $composableBuilder(column: $table.isActive, builder: (column) => column);
+  GeneratedColumn<bool> get isActive =>
+      $composableBuilder(column: $table.isActive, builder: (column) => column);
 
   GeneratedColumn<DateTime> get weatherUpdatedAt => $composableBuilder(
     column: $table.weatherUpdatedAt,
@@ -1678,7 +1698,8 @@ class $$LocationTableTableAnnotationComposer extends Composer<_$WeatherDatabase,
             $table: $db.weatherTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return f(composer);
@@ -1707,9 +1728,12 @@ class $$LocationTableTableTableManager
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () => $$LocationTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () => $$LocationTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () => $$LocationTableTableAnnotationComposer($db: db, $table: table),
+          createFilteringComposer: () =>
+              $$LocationTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LocationTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LocationTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
@@ -1778,15 +1802,22 @@ class $$LocationTableTableTableManager
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (weatherTableRefs)
-                    await $_getPrefetchedData<LocationTableData, $LocationTableTable, WeatherTableData>(
+                    await $_getPrefetchedData<
+                      LocationTableData,
+                      $LocationTableTable,
+                      WeatherTableData
+                    >(
                       currentTable: table,
-                      referencedTable: $$LocationTableTableReferences._weatherTableRefsTable(db),
-                      managerFromTypedResult: (p0) => $$LocationTableTableReferences(
-                        db,
-                        table,
-                        p0,
-                      ).weatherTableRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) => referencedItems.where((e) => e.locationId == item.id),
+                      referencedTable: $$LocationTableTableReferences
+                          ._weatherTableRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$LocationTableTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).weatherTableRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.locationId == item.id),
                       typedResults: items,
                     ),
                 ];
@@ -1811,41 +1842,51 @@ typedef $$LocationTableTableProcessedTableManager =
       LocationTableData,
       PrefetchHooks Function({bool weatherTableRefs})
     >;
-typedef $$WeatherTableTableCreateCompanionBuilder = WeatherTableCompanion Function({
-  Value<int> id,
-  required DateTime start,
-  required DateTime end,
-  required int type,
-  required double temperature,
-  required double apparentTemperature,
-  required double windForce,
-  required double windGusts,
-  required double windDirectionGrad,
-  required double precipitationPercent,
-  required double precipitationAmountMm,
-  required double rain,
-  required String locationId,
-});
-typedef $$WeatherTableTableUpdateCompanionBuilder = WeatherTableCompanion Function({
-  Value<int> id,
-  Value<DateTime> start,
-  Value<DateTime> end,
-  Value<int> type,
-  Value<double> temperature,
-  Value<double> apparentTemperature,
-  Value<double> windForce,
-  Value<double> windGusts,
-  Value<double> windDirectionGrad,
-  Value<double> precipitationPercent,
-  Value<double> precipitationAmountMm,
-  Value<double> rain,
-  Value<String> locationId,
-});
+typedef $$WeatherTableTableCreateCompanionBuilder =
+    WeatherTableCompanion Function({
+      Value<int> id,
+      required DateTime start,
+      required DateTime end,
+      required int type,
+      required double temperature,
+      required double apparentTemperature,
+      required double windForce,
+      required double windGusts,
+      required double windDirectionGrad,
+      required double precipitationPercent,
+      required double precipitationAmountMm,
+      required double rain,
+      required String locationId,
+    });
+typedef $$WeatherTableTableUpdateCompanionBuilder =
+    WeatherTableCompanion Function({
+      Value<int> id,
+      Value<DateTime> start,
+      Value<DateTime> end,
+      Value<int> type,
+      Value<double> temperature,
+      Value<double> apparentTemperature,
+      Value<double> windForce,
+      Value<double> windGusts,
+      Value<double> windDirectionGrad,
+      Value<double> precipitationPercent,
+      Value<double> precipitationAmountMm,
+      Value<double> rain,
+      Value<String> locationId,
+    });
 
-final class $$WeatherTableTableReferences extends BaseReferences<_$WeatherDatabase, $WeatherTableTable, WeatherTableData> {
+final class $$WeatherTableTableReferences
+    extends
+        BaseReferences<
+          _$WeatherDatabase,
+          $WeatherTableTable,
+          WeatherTableData
+        > {
   $$WeatherTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $LocationTableTable _locationIdTable(_$WeatherDatabase db) => db.locationTable.createAlias('weather_table__location_id__location_table__id');
+  static $LocationTableTable _locationIdTable(_$WeatherDatabase db) => db
+      .locationTable
+      .createAlias('weather_table__location_id__location_table__id');
 
   $$LocationTableTableProcessedTableManager get locationId {
     final $_column = $_itemColumn<String>('location_id')!;
@@ -1862,7 +1903,8 @@ final class $$WeatherTableTableReferences extends BaseReferences<_$WeatherDataba
   }
 }
 
-class $$WeatherTableTableFilterComposer extends Composer<_$WeatherDatabase, $WeatherTableTable> {
+class $$WeatherTableTableFilterComposer
+    extends Composer<_$WeatherDatabase, $WeatherTableTable> {
   $$WeatherTableTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -1870,7 +1912,6 @@ class $$WeatherTableTableFilterComposer extends Composer<_$WeatherDatabase, $Wea
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -1947,14 +1988,16 @@ class $$WeatherTableTableFilterComposer extends Composer<_$WeatherDatabase, $Wea
             $table: $db.locationTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
   }
 }
 
-class $$WeatherTableTableOrderingComposer extends Composer<_$WeatherDatabase, $WeatherTableTable> {
+class $$WeatherTableTableOrderingComposer
+    extends Composer<_$WeatherDatabase, $WeatherTableTable> {
   $$WeatherTableTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -1962,7 +2005,6 @@ class $$WeatherTableTableOrderingComposer extends Composer<_$WeatherDatabase, $W
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -2039,14 +2081,16 @@ class $$WeatherTableTableOrderingComposer extends Composer<_$WeatherDatabase, $W
             $table: $db.locationTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
   }
 }
 
-class $$WeatherTableTableAnnotationComposer extends Composer<_$WeatherDatabase, $WeatherTableTable> {
+class $$WeatherTableTableAnnotationComposer
+    extends Composer<_$WeatherDatabase, $WeatherTableTable> {
   $$WeatherTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -2054,14 +2098,17 @@ class $$WeatherTableTableAnnotationComposer extends Composer<_$WeatherDatabase, 
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<DateTime> get start =>
+      $composableBuilder(column: $table.start, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get start => $composableBuilder(column: $table.start, builder: (column) => column);
+  GeneratedColumn<DateTime> get end =>
+      $composableBuilder(column: $table.end, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get end => $composableBuilder(column: $table.end, builder: (column) => column);
-
-  GeneratedColumn<int> get type => $composableBuilder(column: $table.type, builder: (column) => column);
+  GeneratedColumn<int> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
 
   GeneratedColumn<double> get temperature => $composableBuilder(
     column: $table.temperature,
@@ -2073,9 +2120,11 @@ class $$WeatherTableTableAnnotationComposer extends Composer<_$WeatherDatabase, 
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get windForce => $composableBuilder(column: $table.windForce, builder: (column) => column);
+  GeneratedColumn<double> get windForce =>
+      $composableBuilder(column: $table.windForce, builder: (column) => column);
 
-  GeneratedColumn<double> get windGusts => $composableBuilder(column: $table.windGusts, builder: (column) => column);
+  GeneratedColumn<double> get windGusts =>
+      $composableBuilder(column: $table.windGusts, builder: (column) => column);
 
   GeneratedColumn<double> get windDirectionGrad => $composableBuilder(
     column: $table.windDirectionGrad,
@@ -2092,7 +2141,8 @@ class $$WeatherTableTableAnnotationComposer extends Composer<_$WeatherDatabase, 
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get rain => $composableBuilder(column: $table.rain, builder: (column) => column);
+  GeneratedColumn<double> get rain =>
+      $composableBuilder(column: $table.rain, builder: (column) => column);
 
   $$LocationTableTableAnnotationComposer get locationId {
     final $$LocationTableTableAnnotationComposer composer = $composerBuilder(
@@ -2110,7 +2160,8 @@ class $$WeatherTableTableAnnotationComposer extends Composer<_$WeatherDatabase, 
             $table: $db.locationTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
@@ -2139,9 +2190,12 @@ class $$WeatherTableTableTableManager
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () => $$WeatherTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () => $$WeatherTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () => $$WeatherTableTableAnnotationComposer($db: db, $table: table),
+          createFilteringComposer: () =>
+              $$WeatherTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WeatherTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WeatherTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -2215,15 +2269,30 @@ class $$WeatherTableTableTableManager
               db: db,
               explicitlyWatchedTables: [],
               addJoins:
-                  <T extends TableManagerState<dynamic, dynamic, dynamic, dynamic, dynamic, dynamic, dynamic, dynamic, dynamic, dynamic, dynamic>>(
-                    state,
-                  ) {
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
                     if (locationId) {
                       state = state.withJoin(
                         currentTable: table,
                         currentColumn: table.locationId,
-                        referencedTable: $$WeatherTableTableReferences._locationIdTable(db),
-                        referencedColumn: $$WeatherTableTableReferences._locationIdTable(db).id,
+                        referencedTable: $$WeatherTableTableReferences
+                            ._locationIdTable(db),
+                        referencedColumn: $$WeatherTableTableReferences
+                            ._locationIdTable(db)
+                            .id,
                       ) as T;
                     }
 
@@ -2255,10 +2324,9 @@ typedef $$WeatherTableTableProcessedTableManager =
 
 class $WeatherDatabaseManager {
   final _$WeatherDatabase _db;
-
   $WeatherDatabaseManager(this._db);
-
-  $$LocationTableTableTableManager get locationTable => $$LocationTableTableTableManager(_db, _db.locationTable);
-
-  $$WeatherTableTableTableManager get weatherTable => $$WeatherTableTableTableManager(_db, _db.weatherTable);
+  $$LocationTableTableTableManager get locationTable =>
+      $$LocationTableTableTableManager(_db, _db.locationTable);
+  $$WeatherTableTableTableManager get weatherTable =>
+      $$WeatherTableTableTableManager(_db, _db.weatherTable);
 }

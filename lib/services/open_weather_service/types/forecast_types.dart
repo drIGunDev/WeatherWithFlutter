@@ -11,7 +11,8 @@ final class DayForecast({
 typedef DaysForecast = List<DayForecast>;
 
 extension Infarior on DayForecast {
-  WeatherItem get inferior => hoursForecast.reduce((value, element) => value.item.type.type > element.item.type.type ? value : element).item;
+  Event<WeatherItem> get inferior => hoursForecast.reduce((value, element) => value.item.type.type > element.item.type.type ? value : element);
+  Event<WeatherItem> get superior => hoursForecast.reduce((value, element) => value.item.type.type < element.item.type.type ? value : element);
 
   Temperature get minTemperature =>
       hoursForecast.reduce((value, element) => value.item.temperature.celsius < element.item.temperature.celsius ? value : element).item.temperature;

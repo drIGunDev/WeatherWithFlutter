@@ -9,34 +9,40 @@ class const DayHours({
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final headerTextStyle = TextStyle(fontSize: 14, fontWeight: .bold, color: Colors.white);
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
             color: Colors.lightBlueAccent,
-            padding: const EdgeInsets.all(5),
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: .spaceAround,
-              children: [
-                Text('Time', style: headerTextStyle),
-                Text('Weather', style: headerTextStyle),
-                Text('Temperature°', style: headerTextStyle),
-                Text('Wind km/h', style: headerTextStyle),
-              ],
-            ),
+            padding: const EdgeInsets.only(top: 8, bottom: 8),
+            child: _tableHeader(),
           ),
         ),
         for (var i = 0; i < day.hoursForecast.length; i++) ...[
-          HourRow(event: day.hoursForecast[i]),
-          if (i < day.hoursForecast.length - 1)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Divider(color: Colors.grey.shade300),
-            ),
+          if (day.hoursForecast[i].start.millisecondsSinceEpoch >= DateTime.now().millisecondsSinceEpoch - 3600000) ...[
+            HourRow(event: day.hoursForecast[i]),
+            if (i < day.hoursForecast.length - 1)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Divider(color: Colors.grey.shade300),
+              ),
+          ],
         ],
+        const SizedBox(height: 15),
+      ],
+    );
+  }
+
+  Widget _tableHeader() {
+    final headerTextStyle = TextStyle(fontSize: 14, fontWeight: .bold, color: Colors.white);
+    return Row(
+      mainAxisAlignment: .spaceAround,
+      children: [
+        Text('Time', style: headerTextStyle),
+        Text('Weather', style: headerTextStyle),
+        Text('Temp.', style: headerTextStyle),
+        Text('Wind', style: headerTextStyle),
       ],
     );
   }
