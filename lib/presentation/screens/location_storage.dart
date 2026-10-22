@@ -77,7 +77,7 @@ class const LocationStorage({super.key}) extends ConsumerWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(AppSpacing.large),
-                  onTap: () => launchUrl(Uri.parse('https://open-meteo.com/')),
+                  onTap: () async => launchUrl(Uri.parse('https://open-meteo.com/')),
                   child: Text(
                     'Forecasts by Open-Meteo.com (c) licensed under CC BY 4.0',
                     style: TextStyle(color: Colors.blue),

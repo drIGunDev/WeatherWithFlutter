@@ -20,7 +20,7 @@ class const DaySummary({
       child: Column(
         crossAxisAlignment: .start,
         children: [
-          Text(DateTimeFormat.dayShort(context.l10n, day.hoursForecast.first.start), style: AppTextStyles.textLarge.copyWith(fontWeight: .bold)),
+          Text(DateTimeFormat.dayShort(context.l10n, day.hoursForecast.first.start), style: AppTextStyles.textLarge.copyWith(fontWeight: .bold, color: AppColors.bgScaffold)),
 
           const SizedBox(height: 20),
 
