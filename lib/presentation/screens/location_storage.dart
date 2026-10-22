@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:weather_with_flutter/presentation/widgets/location_row.dart';
 
 import '../../app/main.dart';
@@ -68,7 +69,25 @@ class const LocationStorage({super.key}) extends ConsumerWidget {
               child: const Text('Add location'),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(AppSpacing.large),
+                  onTap: () => launchUrl(Uri.parse('https://open-meteo.com/')),
+                  child: Text(
+                    'Forecasts by Open-Meteo.com (c) licensed under CC BY 4.0',
+                    style: TextStyle(color: Colors.blue),
+                    textAlign: .center,
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
           ],
         ),
       ),
