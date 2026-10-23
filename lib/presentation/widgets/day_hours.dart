@@ -26,7 +26,7 @@ class const DayHours({
             if (i < day.hoursForecast.length - 1)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Divider(color: Colors.grey.shade300),
+                child: const Divider(thickness: 0.5),
               ),
           ],
         ],

@@ -23,7 +23,7 @@ class const LocationStorage({super.key}) extends ConsumerWidget {
       ),
       backgroundColor: AppColors.bgSurface,
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 8, right: 16, bottom: 8),
         child: Column(
           children: [
             Expanded(

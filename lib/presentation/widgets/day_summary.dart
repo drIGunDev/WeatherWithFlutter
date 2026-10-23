@@ -22,7 +22,7 @@ class const DaySummary({
         children: [
           Text(DateTimeFormat.dayShort(context.l10n, day.hoursForecast.first.start), style: AppTextStyles.textLarge.copyWith(fontWeight: .bold, color: AppColors.bgScaffold)),
 
-          const SizedBox(height: 20),
+          _customDivider(),
 
           Row(
             mainAxisAlignment: .spaceEvenly,
@@ -43,11 +43,23 @@ class const DaySummary({
             ],
           ),
 
-          const SizedBox(height: 20),
+          _customDivider(),
 
           _stat(),
         ],
       ),
+    );
+  }
+
+  Widget _customDivider() {
+    return LayoutBuilder(
+        builder: (context, constraints) {
+          final paddingHorizontal = constraints.maxWidth * 0.45;
+          return Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 10, left: paddingHorizontal, right: paddingHorizontal),
+            child: const Divider(thickness: 1),
+          );
+        }
     );
   }
 
