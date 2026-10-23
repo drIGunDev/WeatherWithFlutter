@@ -8,6 +8,7 @@ import '../../services/open_weather_service/types/event.dart';
 import '../../services/open_weather_service/types/weather_item.dart';
 import '../../tools/location_time.dart';
 import '../formatters/weathers_labels.dart';
+import 'weather_emoji.dart';
 
 class const WeatherNow({
   super.key,
@@ -32,6 +33,10 @@ class const WeatherNow({
               style: AppTextStyles.textExtraLarge.copyWith(fontWeight: .bold),
               textAlign: .center,
             ),
+
+          const SizedBox(height: 10),
+
+          if (currentWeather != null) WeatherEmoji(type: currentWeather.item.type, date: currentWeather.start, size: 100),
 
           const SizedBox(height: 10),
 
