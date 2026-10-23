@@ -26,6 +26,8 @@ extension _ToCompanion on Location {
       timezone: timezone,
       isActive: Value(isActive),
       weatherUpdatedAt: Value(weatherUpdatedAt),
+      // A location picked from the geocoder has no offset yet; don't wipe a known one.
+      utcOffsetSeconds: Value.absentIfNull(utcOffsetSeconds),
     );
   }
 }
@@ -43,6 +45,7 @@ extension _FromCompanion on LocationTableData {
       timezone: timezone,
       isActive: isActive,
       weatherUpdatedAt: weatherUpdatedAt,
+      utcOffsetSeconds: utcOffsetSeconds,
     );
   }
 }
@@ -105,7 +108,7 @@ final class DatabaseManagerImpl({
 }) implements LocationManager, ForecastManager {
   @override
   Future<void> addate({required Location location}) async {
-    _database.transaction(() async {
+    await _database.transaction(() async {
       final existing = await _find(id: location.id);
       if (existing == null) {
         await _database.into(_database.locationTable).insert(location.toCompanion());
@@ -128,7 +131,7 @@ final class DatabaseManagerImpl({
 
   @override
   Future<void> deleteLocation({required Location location}) async {
-    _database.transaction(() async {
+    await _database.transaction(() async {
       final allLocations = await fetchAllLocation();
       if (allLocations.isEmpty) return;
 
@@ -227,7 +230,7 @@ final class DatabaseManagerImpl({
   @override
   Future<void> deleteForecast({required Location location}) {
     return _database.transaction(() async {
-      (_database.delete(
+      await (_database.delete(
         _database.weatherTable,
       )..where((tbl) => tbl.locationId.equals(location.id))).go();
     });

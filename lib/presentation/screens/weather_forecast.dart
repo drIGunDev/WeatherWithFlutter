@@ -58,7 +58,7 @@ class WeatherForecast extends ConsumerWidget {
 
                   const SizedBox(height: 10),
 
-                  for (var i = 0; i < data.forecast.length; i++) DayCompose(day: data.forecast[i]),
+                  for (var i = 0; i < data.forecast.length; i++) DayCompose(day: data.forecast[i], utcOffsetSeconds: data.location?.utcOffsetSeconds),
                 ],
               );
             },
@@ -66,6 +66,8 @@ class WeatherForecast extends ConsumerWidget {
               mainAxisAlignment: .center,
               children: [
                 Text('loading ...', style: AppTextStyles.textLarge),
+                const SizedBox(height: 30),
+                const CircularProgressIndicator(color: Colors.white),
               ],
             ),
             error: (err, _) => Column(

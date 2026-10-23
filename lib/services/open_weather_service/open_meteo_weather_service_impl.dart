@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
+import '../../app/app_config.dart';
 import '../../tools/logger/log.dart';
 import 'types/event.dart';
 import 'types/forecast_types.dart';
@@ -14,7 +17,7 @@ import 'weather_service.dart';
 
 typedef WeatherApiRequestObserver = void Function(Uri uri, {int? statusCode});
 
-final class OpenMeteoWeatherServiceImpl implements WeatherService {
+final class const OpenMeteoWeatherServiceImpl({required this._client, this._onRequest}) implements WeatherService {
   static const String _hourly =
       'rain,temperature_2m,apparent_temperature,precipitation_probability,'
       'precipitation,weather_code,wind_speed_10m,wind_direction_10m,'
@@ -22,8 +25,6 @@ final class OpenMeteoWeatherServiceImpl implements WeatherService {
 
   final http.Client _client;
   final WeatherApiRequestObserver? _onRequest;
-
-  const OpenMeteoWeatherServiceImpl({required this._client, this._onRequest});
 
   @override
   Future<ForecastList> fetchForecast({required WeatherForecastFetchParameters params}) async {
@@ -38,19 +39,24 @@ final class OpenMeteoWeatherServiceImpl implements WeatherService {
     });
     Log.d('request: $uri');
     final response = await _send(uri);
-
     return switch (response.statusCode) {
       200 => _transformToEvents(response.body, params.location),
-      _ => throw Exception('HTTP ${response.statusCode}'),
+      _ => throw CommunicationError('HTTP ${response.statusCode}'),
     };
   }
 
   Future<http.Response> _send(Uri uri) async {
     int? statusCode;
     try {
-      final response = await _client.get(uri);
+      final response = await _client.get(uri).timeout(Duration(seconds: AppParams.requestTimeoutSec));
       statusCode = response.statusCode;
       return response;
+    } on SocketException catch (e) {
+      throw CommunicationError(e.toString());
+    } on http.ClientException catch (e) {
+      throw CommunicationError(e.toString());
+    } on TimeoutException catch (e) {
+      throw CommunicationError(e.toString());
     } finally {
       _onRequest?.call(uri, statusCode: statusCode);
     }
@@ -60,7 +66,9 @@ final class OpenMeteoWeatherServiceImpl implements WeatherService {
     String responseBody,
     location,
   ) async {
-    final decoded = await _parseResponse(responseBody);
+    final (decoded, utcOffsetSeconds) = await _parseResponse(responseBody);
+    // Hourly timestamps are wall-clock time at the location; remember how far that is from UTC.
+    final located = location.copyWith(utcOffsetSeconds: utcOffsetSeconds);
 
     final results = <Event<WeatherItem>>[];
     for (var i = 0; i < decoded.time.length; i++) {
@@ -84,7 +92,7 @@ final class OpenMeteoWeatherServiceImpl implements WeatherService {
         ),
         precipitation: precipitation,
         wind: wind,
-        location: location,
+        location: located,
       );
       final event = Event(start: start, end: end, item: weatherItem);
       results.add(event);
@@ -92,7 +100,7 @@ final class OpenMeteoWeatherServiceImpl implements WeatherService {
     return results;
   }
 
-  Future<_OpenMeteoHourlyDTO> _parseResponse(String responseBody) async {
+  Future<(_OpenMeteoHourlyDTO, int?)> _parseResponse(String responseBody) async {
     final decoded = jsonDecode(responseBody);
     if (decoded is! Map<String, dynamic>) {
       throw const FormatException('Expected JSON object');
@@ -100,7 +108,7 @@ final class OpenMeteoWeatherServiceImpl implements WeatherService {
     final json = decoded;
     final hourly = json['hourly'];
 
-    return _OpenMeteoHourlyDTO.fromJson(hourly);
+    return (_OpenMeteoHourlyDTO.fromJson(hourly), (json['utc_offset_seconds'] as num?)?.toInt());
   }
 }
 

@@ -8,6 +8,7 @@ import 'day_summary.dart';
 final class const DayCompose({
   super.key,
   required final DayForecast day,
+  required final int? utcOffsetSeconds,
 }) extends StatefulWidget {
   @override
   State<DayCompose> createState() => _DayComposeState();
@@ -35,7 +36,7 @@ class _DayComposeState extends State<DayCompose> {
                   child: DaySummary(day: widget.day),
                 ),
               ),
-              if (_isExpanded) DayHours(day: widget.day),
+              if (_isExpanded) DayHours(day: widget.day, utcOffsetSeconds: widget.utcOffsetSeconds),
             ],
           ),
         ),

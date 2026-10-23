@@ -27,6 +27,8 @@ class LocationTable extends Table {
 
   DateTimeColumn get weatherUpdatedAt => dateTime().nullable().withDefault(const Constant(null))();
 
+  IntColumn get utcOffsetSeconds => integer().nullable()();
+
   @override
   Set<Column> get primaryKey => {id};
 }
@@ -66,7 +68,7 @@ final class WeatherDatabase([NativeDatabase? connection]) extends _$WeatherDatab
   this : super(connection ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -74,7 +76,11 @@ final class WeatherDatabase([NativeDatabase? connection]) extends _$WeatherDatab
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     },
-    onUpgrade: (m, from, to) async {},
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        await m.addColumn(locationTable, locationTable.utcOffsetSeconds);
+      }
+    },
   );
 
   Future<void> deleteEverything() => transaction(() async {

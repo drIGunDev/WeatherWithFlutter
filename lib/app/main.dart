@@ -17,37 +17,46 @@ abstract interface class NavigationPaths {
   static const String selectLocation = '/select_location';
 }
 
-abstract interface class AppParams {
-  static const int updateIntervalSec = 60 * 60;
-  static const int forecastDays = 10;
-  static const int pastDays = 0;
-}
-
-Future<void> initializing(WidgetRef ref) async {
-  final locationManager = ref.read(locationManagerComponent);
-  final activeLocation = await locationManager.findActiveLocation();
-  if (activeLocation != null) {
-    final forecastProvider = ref.read(weatherForecastProvider.notifier);
-    await forecastProvider.fetchForecast(params: WeatherForecastFetchParameters(location: activeLocation));
-  }
-}
-
 void main() => runApp(
   ProviderScope(
-    child: Consumer(
-      builder: (context, ref, _) {
-        unawaited(initializing(ref));
-        return MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          initialRoute: NavigationPaths.root,
-          routes: {
-            NavigationPaths.root: (context) => WeatherForecast(),
-            NavigationPaths.locationStorage: (context) => LocationStorage(),
-            NavigationPaths.selectLocation: (context) => LocationSelection(),
-          },
-        );
-      },
+    child: _Initializer(
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        initialRoute: NavigationPaths.root,
+        routes: {
+          NavigationPaths.root: (context) => WeatherForecast(),
+          NavigationPaths.locationStorage: (context) => LocationStorage(),
+          NavigationPaths.selectLocation: (context) => LocationSelection(),
+        },
+      ),
     ),
   ),
 );
+
+class const _Initializer({required final Widget child}) extends ConsumerStatefulWidget {
+  @override
+  ConsumerState<_Initializer> createState() => _InitializerState();
+}
+
+class _InitializerState extends ConsumerState<_Initializer> {
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_initializing(ref));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
+  }
+
+  Future<void> _initializing(WidgetRef ref) async {
+    final locationManager = ref.read(locationManagerComponent);
+    final activeLocation = await locationManager.findActiveLocation();
+    if (activeLocation != null) {
+      final forecastProvider = ref.read(weatherForecastProvider.notifier);
+      await forecastProvider.fetchForecast(params: WeatherForecastFetchParameters(location: activeLocation));
+    }
+  }
+}

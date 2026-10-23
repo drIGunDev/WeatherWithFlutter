@@ -18,6 +18,9 @@ final class Location({
   required final String timezone,
   final bool isActive = false,
   final DateTime? weatherUpdatedAt,
+  /// Offset of the location's local time from UTC, as reported by the forecast API.
+  /// Not part of equality: it is derived metadata, unknown until the first forecast fetch.
+  final int? utcOffsetSeconds,
 }) {
   final LocationId id;
 
@@ -50,6 +53,7 @@ final class Location({
   Location copyWith({
     Wrapped<DateTime?>? weatherUpdatedAt,
     bool? isActive,
+    int? utcOffsetSeconds,
   }) {
     return Location(
       id: id,
@@ -62,6 +66,7 @@ final class Location({
       timezone: timezone,
       isActive: isActive ?? this.isActive,
       weatherUpdatedAt: weatherUpdatedAt?.value ?? this.weatherUpdatedAt,
+      utcOffsetSeconds: utcOffsetSeconds ?? this.utcOffsetSeconds,
     );
   }
 
@@ -77,7 +82,8 @@ final class Location({
       ..write('city: $city, ')
       ..write('timezone: $timezone, ')
       ..write('isActive: $isActive, ')
-      ..write('weatherUpdatedAt: $weatherUpdatedAt)');
+      ..write('weatherUpdatedAt: $weatherUpdatedAt, ')
+      ..write('utcOffsetSeconds: $utcOffsetSeconds)');
     return buffer.toString();
   }
 

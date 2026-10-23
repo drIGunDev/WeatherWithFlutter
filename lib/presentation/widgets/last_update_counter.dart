@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/themes.dart';
+import '../formatters/last_update_format.dart';
 import '../../services/location/state/last_update_counter.dart';
 import '../../services/location/types/location.dart';
 
@@ -26,12 +27,5 @@ Widget _lastUpdateCounterBuilder(AsyncValue<int> counter) {
 }
 
 Widget _lastUpdateText(int lastUpdate) {
-  final textColor = Colors.white;
-  final date = DateTime(2026, 1, 1, 0, 0, lastUpdate);
-  final hour = date.hour;
-  if (hour != 0) return Text('last update: $hour hours ago', style: AppTextStyles.textSmall);
-  final minute = date.minute;
-  if (minute != 0) return Text('last update: $minute minutes ago', style: AppTextStyles.textSmall);
-  final second = date.second;
-  return Text('last update for: $second seconds ago', style: AppTextStyles.textSmall);
+  return Text(formatLastUpdate(Duration(seconds: lastUpdate)), style: AppTextStyles.textSmall);
 }

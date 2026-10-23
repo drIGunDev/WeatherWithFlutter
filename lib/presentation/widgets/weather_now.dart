@@ -6,6 +6,7 @@ import '../../l10n/l10n_context.dart';
 import '../../services/location/types/location.dart';
 import '../../services/open_weather_service/types/event.dart';
 import '../../services/open_weather_service/types/weather_item.dart';
+import '../../tools/location_time.dart';
 import '../formatters/weathers_labels.dart';
 
 class const WeatherNow({
@@ -75,7 +76,7 @@ class const WeatherNow({
 
   Event<WeatherItem>? _getCurrentWeather(DayForecast day) {
     if (day.hoursForecast.isEmpty) return null;
-    final currentHour = DateTime.now().hour;
+    final currentHour = locationNow(_location?.utcOffsetSeconds).hour;
     var item = day.hoursForecast.first;
     for (var i = 1; i < day.hoursForecast.length; i++) {
       final hour = day.hoursForecast[i];

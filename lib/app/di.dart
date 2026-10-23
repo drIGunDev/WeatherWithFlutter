@@ -14,14 +14,17 @@ import '../services/open_weather_service/weather_service.dart';
 ///
 /// Http client
 ///
-final httpClientComponent = Provider<http.Client>((ref) => http.Client());
+final httpClientComponent = Provider<http.Client>((ref) {
+  final client = http.Client();
+  ref.onDispose(() => client.close());
+  return client;
+});
 
 ///
 /// Geocoding service
 ///
 final geocodingServiceComponent = Provider<GeocodingService>((ref) {
-  final geocodingService = OpenMeteoGeocodingServiceImpl(client: ref.read(httpClientComponent));
-  return geocodingService;
+  return OpenMeteoGeocodingServiceImpl(client: ref.read(httpClientComponent));
 });
 
 final geocodingProvider = AsyncNotifierProvider<GeocodingNotifier, GeocodingState>(GeocodingNotifier.new);
@@ -30,15 +33,16 @@ final geocodingProvider = AsyncNotifierProvider<GeocodingNotifier, GeocodingStat
 /// Weather service
 ///
 final meteoServiceComponent = Provider<WeatherService>((ref) {
-  final meteoService = OpenMeteoWeatherServiceImpl(client: ref.read(httpClientComponent));
-  return meteoService;
+  return OpenMeteoWeatherServiceImpl(client: ref.read(httpClientComponent));
 });
 
 ///
 /// Database
 ///
 final weatherDatabaseComponent = Provider<WeatherDatabase>((ref) {
-  return WeatherDatabase();
+  final database = WeatherDatabase();
+  ref.onDispose(() => database.close());
+  return database;
 });
 
 final locationManagerComponent = Provider<LocationManager>((ref) {

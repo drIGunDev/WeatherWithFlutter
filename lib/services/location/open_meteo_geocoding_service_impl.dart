@@ -24,13 +24,11 @@ final class OpenMeteoGeocodingServiceImpl({required this._client}) implements Ge
 
     return switch (response.statusCode) {
       200 => _transformToEvents(response.body),
-      > 200 => throw Exception('HTTP ${response.statusCode}'),
       _ => throw Exception('HTTP ${response.statusCode}'),
     };
   }
 
   Future<List<Location>> _transformToEvents(String body) async {
-    await Future.delayed(const Duration(milliseconds: 300));
     return (await _parseResponse(body))
         .map(
           (e) => Location(
@@ -65,7 +63,9 @@ final class OpenMeteoGeocodingServiceImpl({required this._client}) implements Ge
       throw const FormatException('Expected JSON object');
     }
     final json = decoded;
+    // Open-Meteo omits `results` entirely when nothing matches.
     final results = json['results'];
+    if (results is! List) return const [];
 
     final List<_OpenMeteoGeocodingDTO> list = results
         .map<_OpenMeteoGeocodingDTO?>((e) => tryParse(e))
